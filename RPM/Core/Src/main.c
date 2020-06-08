@@ -63,6 +63,7 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint16_t Contador = 0000;
+uint8_t ms_tick = 0;
 // Activacion de la Interrupcion del Timer 2 Canal 1
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -71,6 +72,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 		/* Frecuencia del contador de 1ms */
 		Contador = Contador + 1;
+		ms_tick = 1;
+	}
+	else
+	{
+		ms_tick = 0;
 	}
 }
 #ifdef __GNUC__
@@ -118,8 +124,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   volatile uint32_t Valor = 0,RPM =0;
   uint32_t Timer2 = 0;
+  uint16_t Contador = 0;
   //uint32_t Period = 9999;
-
   //HAL_LPTIM_Counter_Start(&hlptim1, Period);
   HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
@@ -131,16 +137,22 @@ int main(void)
   while (1)
   {
 	//Valor = HAL_LPTIM_ReadCounter(&hlptim1);
-	//Obtencion del valor del TIM2
+
+	  //Obtencion del valor del TIM2
 	Timer2 = __HAL_TIM_GetCounter(&htim2);
+	/* Ciclo con velocidad de 100ms */
+	if(ms_tick == 1)
+	{
+		Contador++;
+		/* Envio del contador en el display */
+		app_Despliegue(Contador);
+	}
 	//RPM = (Valor*12.5e-9/15)*60;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	 //uint16_t Numero = 2589;
-	HAL_Delay(5);
-	app_Despliegue(Valor);
-	//printf("Count %ld RPM %ld\r\n", Valor,RPM);
+	//HAL_Delay(5);
+	//app_Despliegue(Valor);
   }
   /* USER CODE END 3 */
 }

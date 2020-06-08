@@ -1,15 +1,15 @@
+/* Libreria realizada por Adrián Darío Díaz López */
+/* Libreria necesaria para el funcionamiento de la libreria */
+/* La libreria es para display de 7 segmentos de catodo comun
+ * si se quiere usar para anodo es necesario cambiar los 0 por
+ * los unos en la funcion app_NumeroA7Segmentos, app_SeleccionDisplay
+ * app_FloatADisplay y app_LetrasADisplay.
+ */
 #include "app_Despliegue.h"
 
-/* Impresion de datos en display de 7 segmentos */
-
-/* Colocando los valores en hexadecimal de los segmentos */
-/* Numeros:		       0	1	2	 3	  4	   5	6	7	8	9	A	B	C	D	E	F  */
-/* Vector:			   0	1	2	 3	  4	   5	6	7	8	9	10	11	12	13	14	15 */
-
-
+/* Conversion del valor numerico para 7 segmentos */
 void app_NumeroA7Segmentos(uint8_t Numero)
 {
-	/* BRR Indica un cero y BSRR indica un 1 */
 	switch(Numero)
 	{
 		case 0:
@@ -120,6 +120,8 @@ void app_NumeroA7Segmentos(uint8_t Numero)
 	}
 }
 
+/* Seleccion del display, su uso es para 4 displays de 7 segmentos */
+/* Es necesario el usado de transistores */
 void app_SeleccionDisplay(uint8_t Display)
 {
 	switch(Display)
@@ -154,7 +156,7 @@ void app_SeleccionDisplay(uint8_t Display)
 			}break;
 		default:
 		{
-			/* Envia todos los displays a cero */
+			/* Envia todos los displays a 1 logicos */
 			HAL_GPIO_WritePin(Display_0_GPIO_Port, Display_0_Pin, 1);
 			HAL_GPIO_WritePin(Display_1_GPIO_Port, Display_1_Pin, 1);
 			HAL_GPIO_WritePin(Display_2_GPIO_Port, Display_2_Pin, 1);
@@ -163,6 +165,7 @@ void app_SeleccionDisplay(uint8_t Display)
 	}
 }
 
+/* Separacion de numero en unidades, decenas, centenas ... */
 void app_Despliegue(uint16_t Numero)
 {
 	uint8_t Primero  =  Numero % 10;
@@ -184,6 +187,7 @@ void app_Despliegue(uint16_t Numero)
 	HAL_Delay(3);
 }
 
+/* Conversion de datos flotantes a displays de 7 segmentos */
 void app_FloatADisplay(float NumeroFlotante) //125.8
 {
 	volatile int Numero = 0;
@@ -210,6 +214,7 @@ void app_FloatADisplay(float NumeroFlotante) //125.8
 
 }
 
+/* Impresion de letras en display de 7 segmentos */
 void app_LetrasADisplay(char Letras[])
 {
 	volatile uint8_t i=0;
