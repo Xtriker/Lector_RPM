@@ -209,3 +209,196 @@ void app_FloatADisplay(float NumeroFlotante) //125.8
 	app_Despliegue(Numero);
 
 }
+
+void app_LetrasADisplay(char Letras[])
+{
+	volatile uint8_t i=0;
+	switch(Letras[i])
+		{
+			case 'A' | 'a':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+
+			}break;
+			case 'B' | 'b':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'C' | 'c':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 0);
+			}break;
+			case 'D' | 'd':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'E' | 'e':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'F' | 'f':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'G' | 'g':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'H' | 'h':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'I' | 'i':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 0);
+			}break;
+			case 'J' | 'j':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 0);
+			}break;
+			case 'L' | 'l':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 0);
+			}break;
+			case 'N' | 'n':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'O' | 'o':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'R' | 'r':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'S' | 's':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'T' | 'r':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			case 'U' | 'u':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 0);
+			}break;
+			case 'Y' | 'y':
+			{
+				HAL_GPIO_WritePin(Segmento_A_GPIO_Port, Segmento_A_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_B_GPIO_Port, Segmento_B_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_C_GPIO_Port, Segmento_C_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_D_GPIO_Port, Segmento_D_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_E_GPIO_Port, Segmento_E_Pin, 0);
+				HAL_GPIO_WritePin(Segmento_F_GPIO_Port, Segmento_F_Pin, 1);
+				HAL_GPIO_WritePin(Segmento_G_GPIO_Port, Segmento_G_Pin, 1);
+			}break;
+			default:
+			{
+				/*No hace nada */
+			}
+		}
+}

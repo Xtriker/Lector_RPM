@@ -26,6 +26,8 @@
 /* Funciones externas */
 
 extern void app_Despliegue(uint16_t Numero);
+extern void app_SeleccionDisplay(uint8_t Display);
 extern void app_FloatADisplay(float NumeroFlotante);
+extern void app_LetrasADisplay(char Letras[]);
 
 
