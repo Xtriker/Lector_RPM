@@ -7,6 +7,9 @@
  */
 #include "app_Despliegue.h"
 
+/* Variables globales */
+uint8_t Bandera[]={0,0,0};
+
 /* Conversion del valor numerico para 7 segmentos */
 void app_NumeroA7Segmentos(uint8_t Numero)
 {
@@ -115,6 +118,7 @@ void app_NumeroA7Segmentos(uint8_t Numero)
 		}break;
 		default:
 		{
+
 			/*No hace nada */
 		}
 	}
@@ -173,18 +177,41 @@ void app_Despliegue(uint16_t Numero)
 	uint8_t Tercero  =  ( Numero - Primero - Segundo ) % 1000 / 100;
 	uint8_t Cuarto =  ( Numero - Primero - Segundo - Tercero ) % 10000 / 1000;
 
+	HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
 	app_SeleccionDisplay(0);
 	app_NumeroA7Segmentos(Cuarto);
-	HAL_Delay(3);
+	HAL_Delay(5);
 	app_SeleccionDisplay(1);
 	app_NumeroA7Segmentos(Tercero);
-	HAL_Delay(3);
+	HAL_Delay(5);
 	app_SeleccionDisplay(2);
 	app_NumeroA7Segmentos(Segundo);
-	HAL_Delay(3);
+	HAL_Delay(5);
 	app_SeleccionDisplay(3);
 	app_NumeroA7Segmentos(Primero);
-	HAL_Delay(3);
+	HAL_Delay(5);
+	if(Bandera[0] == 1)
+	{
+		app_SeleccionDisplay(0);
+		app_NumeroA7Segmentos(Cuarto);
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		HAL_Delay(3);
+	}
+	if(Bandera[1] == 1)
+	{
+		app_SeleccionDisplay(1);
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		app_NumeroA7Segmentos(Tercero);
+		HAL_Delay(3);
+	}
+	if(Bandera[2] == 1)
+	{
+		app_SeleccionDisplay(2);
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		app_NumeroA7Segmentos(Segundo);
+		HAL_Delay(3);
+	}
+
 }
 
 /* Conversion de datos flotantes a displays de 7 segmentos */
@@ -192,22 +219,26 @@ void app_FloatADisplay(float NumeroFlotante) //125.8
 {
 	volatile int Numero = 0;
 
+
 	if( (NumeroFlotante > 0.0) && (NumeroFlotante < 10.0))
 		{
-			app_SeleccionDisplay(3);
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			Bandera[0] = 1;
+			Bandera[1] = 0;
+			Bandera[2] = 0;
 			Numero = NumeroFlotante * 1000;
 		}
 	else if( (NumeroFlotante > 10.0) && (NumeroFlotante < 100.0)) //54.87
 		{
-			app_SeleccionDisplay(2);
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1); //1
+			Bandera[0] = 0;
+			Bandera[1] = 1;
+			Bandera[2] = 0;
 			Numero = NumeroFlotante * 100; //5487
 		}
 	else if( (NumeroFlotante > 100.0) && (NumeroFlotante < 1000.0))
 		{
-			app_SeleccionDisplay(1);
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			Bandera[0] = 0;
+			Bandera[1] = 0;
+			Bandera[2] = 1;
 			Numero = NumeroFlotante * 10;
 		}
 	app_Despliegue(Numero);
@@ -215,10 +246,10 @@ void app_FloatADisplay(float NumeroFlotante) //125.8
 }
 
 /* Impresion de letras en display de 7 segmentos */
-void app_LetrasADisplay(char Letras[])
+void app_LetrasADisplay(char Letras)
 {
-	volatile uint8_t i=0;
-	switch(Letras[i])
+	//volatile uint8_t i=0;
+	switch(Letras)
 		{
 			case 'A' | 'a':
 			{

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;RPM/Encoder.ioc&apos; to &apos;RPM.ioc&apos;" description="Rename resource &apos;Encoder.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Encoder.ioc" name="RPM.ioc" stamp="1591633442524" updateReferences="true"/>
+</session>

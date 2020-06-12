@@ -23,6 +23,8 @@
 #include "stm32l4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "../../Core/Aplicaciones/app_Despliegue.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,6 +90,18 @@ void HardFault_Handler(void)
   while (1)
   {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+	  char mensaje[]= {'e','r','r','o'};
+	  app_SeleccionDisplay(0);
+	  app_LetrasADisplay(mensaje[0]);
+	  HAL_Delay(3);
+	  app_SeleccionDisplay(1);
+	  app_LetrasADisplay(mensaje[1]);
+	  HAL_Delay(3);
+	  app_SeleccionDisplay(2);
+	  app_LetrasADisplay(mensaje[2]);
+	  HAL_Delay(3);
+	  app_SeleccionDisplay(3);
+	  app_LetrasADisplay(mensaje[3]);
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
 }

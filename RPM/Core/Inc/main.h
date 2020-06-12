@@ -54,7 +54,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+extern uint16_t app_ConteoFrecuencia(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -96,14 +96,16 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define Detener_Pin GPIO_PIN_10
+#define Detener_GPIO_Port GPIOC
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
 #define Display_3_Pin GPIO_PIN_4
 #define Display_3_GPIO_Port GPIOB
 #define Display_2_Pin GPIO_PIN_5
 #define Display_2_GPIO_Port GPIOB
-#define Boton_Pin GPIO_PIN_6
-#define Boton_GPIO_Port GPIOB
+#define Entrada_Pin GPIO_PIN_6
+#define Entrada_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

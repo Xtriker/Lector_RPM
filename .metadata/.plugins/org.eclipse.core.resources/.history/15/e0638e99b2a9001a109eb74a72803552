@@ -1,0 +1,29 @@
+/*
+ * app_Frecuencia.c
+ *
+ *  Created on: Jun 8, 2020
+ *      Author: dario
+ */
+
+ /* Librerias del programa */
+
+#include "app_Frecuencia.h"
+
+uint32_t app_LecturaFrecuencia(void)
+{
+
+	TIM_HandleTypeDef htim2;
+	htim2.Instance->CNT = 0;
+	volatile uint32_t incremento = 0, frecuencia = 0;
+	while((htim2.Instance -> CNT)  < 1000)
+		{
+			/* Espera el estado de flanco de subida */
+			while(!(HAL_GPIO_ReadPin(Boton_GPIO_Port, Boton_Pin)));
+			/* Espera el estado de flanco de bajada */
+			while((HAL_GPIO_ReadPin(Boton_GPIO_Port, Boton_Pin)));
+
+			incremento = incremento + 1;
+		}
+	return frecuencia = incremento;
+	incremento = 0;
+}

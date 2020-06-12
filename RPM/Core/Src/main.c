@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "../Aplicaciones/app_Despliegue.h"
+#include "../Aplicaciones/app_Frecuencia.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,22 +63,23 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint16_t Contador = 0000;
-uint8_t ms_tick = 0;
-// Activacion de la Interrupcion del Timer 2 Canal 1
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+
+uint16_t incremento = 0,frecuencia = 0;
+uint16_t app_ConteoFrecuencia(void)
 {
-	/* Si se activa la interrucion aumenta el contador */
-	if(htim -> Instance == TIM2)
+
+	htim2.Instance->CNT = 0;
+	while(htim2.Instance->CNT < 999)
 	{
-		/* Frecuencia del contador de 1ms */
-		Contador = Contador + 1;
-		ms_tick = 1;
+		/* Espera el estado de flanco de subida */
+		while(!(HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin)));
+		/* Espera el estado de flanco de bajada */
+		while((HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin)));
+		incremento = incremento + 1;
 	}
-	else
-	{
-		ms_tick = 0;
-	}
+	return frecuencia = incremento;
+	incremento = 0;
+
 }
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -98,6 +100,8 @@ int main(void)
 
 	#define true (char)1
 	#define false (char)0
+
+
   /* USER CODE END 1 */
   
 
@@ -122,12 +126,12 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  volatile uint32_t Valor = 0,RPM =0;
-  uint32_t Timer2 = 0;
-  uint16_t Contador = 0;
-  //uint32_t Period = 9999;
-  //HAL_LPTIM_Counter_Start(&hlptim1, Period);
+
   HAL_TIM_Base_Start_IT(&htim2);
+
+  /* Declaracion de variables globales */
+
+
   /* USER CODE END 2 */
  
  
@@ -136,23 +140,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	//Valor = HAL_LPTIM_ReadCounter(&hlptim1);
 
-	  //Obtencion del valor del TIM2
-	Timer2 = __HAL_TIM_GetCounter(&htim2);
-	/* Ciclo con velocidad de 100ms */
-	if(ms_tick == 1)
-	{
-		Contador++;
-		/* Envio del contador en el display */
-		app_Despliegue(Contador);
-	}
-	//RPM = (Valor*12.5e-9/15)*60;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	//HAL_Delay(5);
-	//app_Despliegue(Valor);
   }
   /* USER CODE END 3 */
 }
@@ -237,9 +228,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 80;
+  htim2.Init.Prescaler = 80-1;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 999;
+  htim2.Init.Period = 1000-1;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -355,11 +346,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : Boton_Pin */
-  GPIO_InitStruct.Pin = Boton_Pin;
+  /*Configure GPIO pin : Detener_Pin */
+  GPIO_InitStruct.Pin = Detener_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(Boton_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(Detener_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Entrada_Pin */
+  GPIO_InitStruct.Pin = Entrada_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Entrada_GPIO_Port, &GPIO_InitStruct);
 
 }
 

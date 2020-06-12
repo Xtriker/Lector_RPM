@@ -1,0 +1,12 @@
+/*
+ * app_Frecuencia.c
+ *
+ *  Created on: Jun 8, 2020
+ *      Author: dario
+ */
+
+ /* Librerias del programa */
+
+#include "app_Frecuencia.h"
+
+

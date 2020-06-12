@@ -25,24 +25,24 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Encoder.elf \
+RPM.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Encoder.list \
+RPM.list \
 
 OBJCOPY_BIN += \
-Encoder.bin \
+RPM.bin \
 
 
 # All Target
-all: Encoder.elf secondary-outputs
+all: RPM.elf secondary-outputs
 
 # Tool invocations
-Encoder.elf: $(OBJS) $(USER_OBJS) /Users/dario/STM32CubeIDE/workspace_1.2.0/Encoder/STM32L412RBTXP_FLASH.ld
-	arm-none-eabi-gcc -o "Encoder.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/dario/STM32CubeIDE/workspace_1.2.0/Encoder/STM32L412RBTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="Encoder.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+RPM.elf: $(OBJS) $(USER_OBJS) /Users/dario/Documents/STM32_Workspace/Lector_RPM/RPM/STM32L412RBTXP_FLASH.ld
+	arm-none-eabi-gcc -o "RPM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/dario/Documents/STM32_Workspace/Lector_RPM/RPM/STM32L412RBTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="RPM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -51,13 +51,13 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Encoder.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Encoder.list"
+RPM.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "RPM.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Encoder.bin: $(EXECUTABLES)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Encoder.bin"
+RPM.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "RPM.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

@@ -1,0 +1,22 @@
+/*
+ * app_Frecuencia.c
+ *
+ *  Created on: Jun 8, 2020
+ *      Author: dario
+ */
+
+ /* Librerias del programa */
+
+#include "app_Frecuencia.h"
+
+/* Declaracion de la estructura */
+
+typedef struct{
+	Inicio,
+	Cuenta,
+	Calculo,
+	Despliegue
+}Estados;
+/* Declaracion de las funciones */
+
+
