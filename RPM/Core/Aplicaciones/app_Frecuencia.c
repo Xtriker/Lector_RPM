@@ -47,17 +47,18 @@ uint16_t app_CalculoRPM(uint16_t promedio)
 
 void app_Tacometro(void)
 {
-
+	volatile uint8_t boton_evento;
+	boton_evento = app_Debounce();
 	switch(seleccion)
 	{
 		case Inicio:
 		{
-			app_Despliegue((uint16_t)0);
+			app_Despliegue(0);
 			seleccion = Cuenta;
 		}break;
 		case Cuenta:
 		{
-			if(boton_evento == 0)
+			if(boton_evento == 1)
 			{
 				seleccion = Inicio;
 			}
@@ -73,7 +74,7 @@ void app_Tacometro(void)
 		}break;
 		case Calculo:
 		{
-			if(boton_evento == 0)
+			if(boton_evento == 1)
 			{
 				seleccion = Inicio;
 			}
@@ -87,7 +88,14 @@ void app_Tacometro(void)
 		}break;
 		case Despliegue:
 		{
-
+			if(boton_evento == 1)
+			{
+				seleccion = Inicio;
+			}
+			else
+			{
+				app_Despliegue(RPM);
+			}
 		}break;
 		default:
 			{

@@ -140,7 +140,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+	  app_Tacometro();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

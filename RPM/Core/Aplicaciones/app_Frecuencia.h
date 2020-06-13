@@ -33,5 +33,5 @@
 /* Funciones globales */
 
 extern uint32_t app_LecturaFrecuencia(void);
-
+extern void app_Tacometro(void);
 #endif /* APP_FRECUENCIA_H_ */

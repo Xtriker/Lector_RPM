@@ -1,0 +1,38 @@
+/*
+ * app_Debounce.c
+ *
+ *  Created on: 12 jun. 2020
+ *      Author: Dario
+ */
+#include "app_Debounce.h"
+
+TIM_HandleTypeDef htim2;
+uint8_t app_LecturaBoton(void)
+{
+	HAL_TIM_Base_Start(htim2);
+	void HAL_TIM_PeriodElapsedCallback();
+	{
+		volatile uint8_t boton = HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin);
+	}
+}
+
+void app_Debounce(void)
+{
+
+	switch(boton)
+	{
+		case NO_PRESIONADO:
+		{
+
+		}break;
+		case PRESIONADO:
+		{
+
+		}break;
+		default:
+		{
+
+		}
+	}
+}
+

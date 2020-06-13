@@ -1,0 +1,34 @@
+/*
+ * app_Debounce.c
+ *
+ *  Created on: 12 jun. 2020
+ *      Author: Dario
+ */
+#include "app_Debounce.h"
+
+uint8_t app_LecturaBoton(void)
+{
+
+	volatile uint8_t boton = HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin);
+}
+
+void app_Debounce(void)
+{
+
+	switch(boton)
+	{
+		case NO_PRESIONADO:
+		{
+
+		}break;
+		case PRESIONADO:
+		{
+
+		}break;
+		default:
+		{
+
+		}
+	}
+}
+
