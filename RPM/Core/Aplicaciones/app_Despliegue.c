@@ -176,40 +176,68 @@ void app_Despliegue(uint16_t Numero)
 	uint8_t Segundo =  ( Numero - Primero ) % 100 / 10;
 	uint8_t Tercero  =  ( Numero - Primero - Segundo ) % 1000 / 100;
 	uint8_t Cuarto =  ( Numero - Primero - Segundo - Tercero ) % 10000 / 1000;
-
-	HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
-	app_SeleccionDisplay(0);
-	app_NumeroA7Segmentos(Cuarto);
-	HAL_Delay(5);
-	app_SeleccionDisplay(1);
-	app_NumeroA7Segmentos(Tercero);
-	HAL_Delay(5);
-	app_SeleccionDisplay(2);
-	app_NumeroA7Segmentos(Segundo);
-	HAL_Delay(5);
-	app_SeleccionDisplay(3);
-	app_NumeroA7Segmentos(Primero);
-	HAL_Delay(5);
-	if(Bandera[0] == 1)
+	uint8_t Quinto = (Numero - Primero - Segundo - Tercero - Cuarto) % 100000 / 10000;
+	if (Numero > 9999)
 	{
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
 		app_SeleccionDisplay(0);
-		app_NumeroA7Segmentos(Cuarto);
-		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		app_NumeroA7Segmentos(Quinto);
 		HAL_Delay(3);
-	}
-	if(Bandera[1] == 1)
-	{
+
 		app_SeleccionDisplay(1);
-		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		app_NumeroA7Segmentos(Cuarto);
+
+		HAL_Delay(3);
+		app_SeleccionDisplay(2);
 		app_NumeroA7Segmentos(Tercero);
 		HAL_Delay(3);
-	}
-	if(Bandera[2] == 1)
-	{
-		app_SeleccionDisplay(2);
-		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		app_SeleccionDisplay(3);
 		app_NumeroA7Segmentos(Segundo);
 		HAL_Delay(3);
+		app_SeleccionDisplay(1);
+		//app_NumeroA7Segmentos(Cuarto);
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		HAL_Delay(3);
+
+	}
+	if(Numero < 9999)
+	{
+
+
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		app_SeleccionDisplay(0);
+		app_NumeroA7Segmentos(Cuarto);
+		HAL_Delay(3);
+		app_SeleccionDisplay(1);
+		app_NumeroA7Segmentos(Tercero);
+		HAL_Delay(3);
+		app_SeleccionDisplay(2);
+		app_NumeroA7Segmentos(Segundo);
+		HAL_Delay(3);
+		app_SeleccionDisplay(3);
+		app_NumeroA7Segmentos(Primero);
+		HAL_Delay(3);
+		if(Bandera[0] == 1)
+		{
+			app_SeleccionDisplay(0);
+			app_NumeroA7Segmentos(Cuarto);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			HAL_Delay(3);
+		}
+		if(Bandera[1] == 1)
+		{
+			app_SeleccionDisplay(1);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			app_NumeroA7Segmentos(Tercero);
+			HAL_Delay(3);
+		}
+		if(Bandera[2] == 1)
+		{
+			app_SeleccionDisplay(2);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			app_NumeroA7Segmentos(Segundo);
+			HAL_Delay(3);
+		}
 	}
 
 }

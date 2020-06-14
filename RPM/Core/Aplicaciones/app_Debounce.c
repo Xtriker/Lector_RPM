@@ -17,7 +17,7 @@ uint8_t boton = 0,contador = 0;
 void app_LecturaBoton(void)
 {
 		HAL_Delay(5);
-		boton = HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin);
+		boton = HAL_GPIO_ReadPin(Detener_GPIO_Port, Detener_Pin);
 		if(boton == 0)
 		{
 			contador = contador + 1;
