@@ -23,10 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include <math.h>
-#include "../Aplicaciones/app_Despliegue.h"
-#include "../Aplicaciones/app_Frecuencia.h"
+#include "../Aplicaciones/Librerias.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
