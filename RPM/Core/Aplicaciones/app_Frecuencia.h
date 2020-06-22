@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "main.h"
+#include "app_PID.h"
 
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador
@@ -24,7 +25,7 @@
 	#include "stm32l4xx_hal_gpio.h"
 	#include "stm32l4xx_hal_tim.h"
 #elif defined(STM32F1)
-	#include "stm32l103xb.h"
+	#include "stm32f1xx.h"
 	#include "stm32f1xx_hal.h"
 	#include "stm32f1xx_hal_gpio.h"
 	#include "stm32f1xx_hal_tim.h"

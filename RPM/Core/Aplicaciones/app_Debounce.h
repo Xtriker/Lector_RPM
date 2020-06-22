@@ -22,7 +22,7 @@
 	#include "stm32l4xx_hal.h"
 	#include "stm32l4xx_hal_gpio.h"
 #elif defined(STM32F1)
-	#include "stm32l103xb.h"
+	#include "stm32fxx.h"
 	#include "stm32f1xx_hal.h"
 	#include "stm32f1xx_hal_gpio.h"
 #endif

@@ -16,6 +16,7 @@ typedef enum{
 	 Inicio,
 	 Cuenta,
 	 Calculo,
+	 PID,
 	 Despliegue
 }Estados;
 
@@ -68,6 +69,8 @@ uint16_t app_CalculoRPM(uint16_t promedio)
 void app_Tacometro(void)
 {
 	volatile uint8_t boton_evento,division = 1;
+	volatile uint32_t time = 0;
+	volatile uint16_t output = 0;
 	boton_evento = app_Debounce();
 	switch(seleccion)
 	{
@@ -117,6 +120,20 @@ void app_Tacometro(void)
 			}
 
 		}break;
+		case PID:
+		{
+			if(boton_evento == 1)
+			{
+				seleccion = Inicio;
+			}
+			else
+			{
+				time = __HAL_TIM_GET_COUNTER(&htim2);
+				output = app_PID(800, 100, 1, 1, RPM, time);
+				seleccion = Despliegue;
+			}
+		}
+		break;
 		case Despliegue:
 		{
 			if(boton_evento == 1)
@@ -125,7 +142,9 @@ void app_Tacometro(void)
 			}
 			else
 			{
-				app_Despliegue(RPM);
+				app_Despliegue(output);
+				HAL_TIM_Base_Stop_IT(&htim2);
+				seleccion = Cuenta;
 			}
 		}break;
 		default:
