@@ -84,7 +84,6 @@ int main(void)
 
 
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -114,14 +113,12 @@ int main(void)
 
 
   /* USER CODE END 2 */
- 
- 
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  app_Tacometro();
+	//  app_Tacometro();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -296,11 +293,11 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LD4_Pin|Display_3_Pin|Display_2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : B1_Pin */
-  GPIO_InitStruct.Pin = B1_Pin;
+  /*Configure GPIO pin : Boton_azul_Pin */
+  GPIO_InitStruct.Pin = Boton_azul_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(Boton_azul_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Segmento_B_Pin Segmento_C_Pin Segmento_E_Pin Segmento_F_Pin 
                            Segmento_G_Pin Segmento_H_Pin */
@@ -339,9 +336,25 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Entrada_GPIO_Port, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 }
 
 /* USER CODE BEGIN 4 */
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
+{
+	if(GPIO_pin == Boton_azul_Pin)
+	{
+		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+	}
+	else
+	{
+		/* No realiza ninguna funcion */
+	}
+}
 /**
  * @brief Retargets the C library printf function to the USART.
  * @param None
@@ -377,7 +390,7 @@ void Error_Handler(void)
   * @param  line: assert_param error line source number
   * @retval None
   */
-void assert_failed(char *file, uint32_t line)
+void assert_failed(uint8_t *file, uint32_t line)
 { 
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,

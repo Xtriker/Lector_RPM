@@ -58,8 +58,9 @@ extern uint16_t app_ConteoFrecuencia(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define B1_Pin GPIO_PIN_13
-#define B1_GPIO_Port GPIOC
+#define Boton_azul_Pin GPIO_PIN_13
+#define Boton_azul_GPIO_Port GPIOC
+#define Boton_azul_EXTI_IRQn EXTI15_10_IRQn
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOH
 #define Segmento_B_Pin GPIO_PIN_1
