@@ -37,7 +37,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+extern uint8_t Aumento;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -107,6 +107,9 @@ extern uint16_t app_ConteoFrecuencia(void);
 #define Display_2_GPIO_Port GPIOB
 #define Entrada_Pin GPIO_PIN_6
 #define Entrada_GPIO_Port GPIOB
+#define Boton_encoder_Pin GPIO_PIN_8
+#define Boton_encoder_GPIO_Port GPIOB
+#define Boton_encoder_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

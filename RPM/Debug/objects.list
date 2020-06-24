@@ -1,5 +1,6 @@
 "Core/Aplicaciones/app_Debounce.o"
 "Core/Aplicaciones/app_Despliegue.o"
+"Core/Aplicaciones/app_Encoder.o"
 "Core/Aplicaciones/app_Frecuencia.o"
 "Core/Aplicaciones/app_PID.o"
 "Core/Src/main.o"

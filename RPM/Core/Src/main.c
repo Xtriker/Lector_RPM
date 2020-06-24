@@ -63,7 +63,22 @@ static void MX_LPTIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+/* Variables globales */
 
+uint8_t Aumento = 0;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
+{
+	if(GPIO_pin == Boton_encoder_Pin)
+	{
+		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+		Aumento++;
+
+	}
+	else
+	{
+		/* No realiza ninguna funcion */
+	}
+}
 
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -113,12 +128,6 @@ int main(void)
 
   //HAL_TIM_Base_Start_IT(&htim2);
   //HAL_LPTIM_Init(&hlptim1);
-  HAL_LPTIM_Encoder_Start(&hlptim1, 36);
-
-  uint8_t ValorEncoder = 0;
-
-  /* Declaracion de variables globales */
-
 
   /* USER CODE END 2 */
 
@@ -127,22 +136,12 @@ int main(void)
   while (1)
   {
 	//  app_Tacometro();
-	  ValorEncoder = HAL_LPTIM_ReadCounter(&hlptim1)/4;
-
-
-	  if(ValorEncoder > 9)
-	  {
-		  printf("Estado maximo \n \r");
-		  ValorEncoder = 0;
-	  }
-	  else
-	  {
-		  printf("Valor: %d %d\n \r",ValorEncoder,ValorEncoder);
-	  }
+	  app_SeleccionEncoder();
+	  printf("Total: %d \r \n",Total);
+  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
   /* USER CODE END 3 */
 }
 
@@ -394,7 +393,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Entrada_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : Boton_encoder_Pin */
+  GPIO_InitStruct.Pin = Boton_encoder_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Boton_encoder_GPIO_Port, &GPIO_InitStruct);
+
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
@@ -402,17 +410,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
-{
-	if(GPIO_pin == Boton_azul_Pin)
-	{
-		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-	}
-	else
-	{
-		/* No realiza ninguna funcion */
-	}
-}
+
 /**
  * @brief Retargets the C library printf function to the USART.
  * @param None
