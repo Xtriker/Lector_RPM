@@ -78,6 +78,81 @@ void HAL_MspInit(void)
 }
 
 /**
+* @brief LPTIM MSP Initialization
+* This function configures the hardware resources used in this example
+* @param hlptim: LPTIM handle pointer
+* @retval None
+*/
+void HAL_LPTIM_MspInit(LPTIM_HandleTypeDef* hlptim)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(hlptim->Instance==LPTIM1)
+  {
+  /* USER CODE BEGIN LPTIM1_MspInit 0 */
+
+  /* USER CODE END LPTIM1_MspInit 0 */
+    /* Peripheral clock enable */
+    __HAL_RCC_LPTIM1_CLK_ENABLE();
+  
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**LPTIM1 GPIO Configuration    
+    PC0     ------> LPTIM1_IN1
+    PB7     ------> LPTIM1_IN2 
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_0;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF1_LPTIM1;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_7;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF1_LPTIM1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* USER CODE BEGIN LPTIM1_MspInit 1 */
+
+  /* USER CODE END LPTIM1_MspInit 1 */
+  }
+
+}
+
+/**
+* @brief LPTIM MSP De-Initialization
+* This function freeze the hardware resources used in this example
+* @param hlptim: LPTIM handle pointer
+* @retval None
+*/
+void HAL_LPTIM_MspDeInit(LPTIM_HandleTypeDef* hlptim)
+{
+  if(hlptim->Instance==LPTIM1)
+  {
+  /* USER CODE BEGIN LPTIM1_MspDeInit 0 */
+
+  /* USER CODE END LPTIM1_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_LPTIM1_CLK_DISABLE();
+  
+    /**LPTIM1 GPIO Configuration    
+    PC0     ------> LPTIM1_IN1
+    PB7     ------> LPTIM1_IN2 
+    */
+    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_0);
+
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_7);
+
+  /* USER CODE BEGIN LPTIM1_MspDeInit 1 */
+
+  /* USER CODE END LPTIM1_MspDeInit 1 */
+  }
+
+}
+
+/**
 * @brief TIM_Base MSP Initialization
 * This function configures the hardware resources used in this example
 * @param htim_base: TIM_Base handle pointer
