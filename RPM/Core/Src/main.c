@@ -137,6 +137,7 @@ int main(void)
   {
 	//  app_Tacometro();
 	  app_SeleccionEncoder();
+	  app_Despliegue(Total);
 	  printf("Total: %d \r \n",Total);
   }
     /* USER CODE END WHILE */
