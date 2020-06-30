@@ -99,6 +99,8 @@ extern uint16_t app_ConteoFrecuencia(void);
 #define TCK_GPIO_Port GPIOA
 #define Detener_Pin GPIO_PIN_10
 #define Detener_GPIO_Port GPIOC
+#define Display_4_Pin GPIO_PIN_12
+#define Display_4_GPIO_Port GPIOC
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
 #define Display_3_Pin GPIO_PIN_4

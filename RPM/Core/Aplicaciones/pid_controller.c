@@ -14,7 +14,7 @@
 // Revisions can be found here:
 // https://github.com/tcleg
 // 
-// Modified by: Trent Cleghorn , <trentoncleghorn@gmail.com>
+// Modified by: Trent Cleghorn , <trentoncleghorn@gmail.com> & Dario Diaz ,<dariodiaz@alumnos.udg.mx>
 // 
 // Copyright (C) Brett Beauregard , <br3ttb@gmail.com>
 // 
@@ -46,85 +46,81 @@
 //*********************************************************************************
 // Functions
 //*********************************************************************************
-void PIDInit(PIDControl *pid, float kp, float ki, float kd, 
+
+PIDControl pid;
+void PIDInit(float kp, float ki, float kd,
              float sampleTimeSeconds, float minOutput, float maxOutput, 
-             PIDMode mode, PIDDirection controllerDirection)     	
+             PIDMode mode, PIDDirection controllerDirection)
 {
-    pid->controllerDirection = controllerDirection;
-    pid->mode = mode;
-    pid->iTerm = 0.0f;
-    pid->input = 0.0f;
-    pid->lastInput = 0.0f;
-    pid->output = 0.0f;
-    pid->setpoint = 0.0f;
-    
+    pid.controllerDirection = controllerDirection;
+    pid.mode = mode;
+
     if(sampleTimeSeconds > 0.0f)
     {
-        pid->sampleTime = sampleTimeSeconds;
+        pid.sampleTime = sampleTimeSeconds;
     }
     else
     {
         // If the passed parameter was incorrect, set to 1 second
-        pid->sampleTime = 1.0f;
+        pid.sampleTime = 1.0f;
     }
     
-    PIDOutputLimitsSet(pid, minOutput, maxOutput);
-    PIDTuningsSet(pid, kp, ki, kd);
+    PIDOutputLimitsSet(minOutput, maxOutput);
+    PIDTuningsSet(kp, ki, kd);
 }
         
-bool
-PIDCompute(PIDControl *pid) 
+bool PIDCompute(void)
 {
     float error, dInput;
 
-    if(pid->mode == MANUAL)
+    if(pid.mode == MANUAL)
     {
         return false;
     }
     
-    // The classic PID error term
-    error = (pid->setpoint) - (pid->input);
+    /* Error clasico de PID */
+    error = (pid.setpoint) - (pid.input);
     
-    // Compute the integral term separately ahead of time
-    pid->iTerm += (pid->alteredKi) * error;
+    /* Calculo de la parte integrativa */
+    pid.iTerm += (pid.alteredKi) * error;
     
     // Constrain the integrator to make sure it does not exceed output bounds
-    pid->iTerm = CONSTRAIN( (pid->iTerm), (pid->outMin), (pid->outMax) );
+    pid.iTerm = CONSTRAIN( (pid.iTerm), (pid.outMin), (pid.outMax) );
     
-    // Take the "derivative on measurement" instead of "derivative on error"
-    dInput = (pid->input) - (pid->lastInput);
+    /* Determinar la parte derivativa de la lectura y el error derivativo de la lectura */
+    dInput = (pid.input) - (pid.lastInput);
     
-    // Run all the terms together to get the overall output
-    pid->output = (pid->alteredKp) * error + (pid->iTerm) - (pid->alteredKd) * dInput;
+    /* Realiza el ultimo calculo y lo guarda en la variable salida */
+    pid.output = (pid.alteredKp) * error + (pid.iTerm) - (pid.alteredKd) * dInput;
     
     // Bound the output
-    pid->output = CONSTRAIN( (pid->output), (pid->outMin), (pid->outMax) );
+    pid.output = CONSTRAIN( (pid.output), (pid.outMin), (pid.outMax) );
     
-    // Make the current input the former input
-    pid->lastInput = pid->input;
+    /* Manda el valor actual de la lectura del sensor a una lectura previa */
+    pid.lastInput = pid.input;
     
     return true;
 }
      
 void 
-PIDModeSet(PIDControl *pid, PIDMode mode)                                                                                                                                       
+PIDModeSet(PIDMode mode)
 {
     // If the mode changed from MANUAL to AUTOMATIC
-    if(pid->mode != mode && mode == AUTOMATIC)
+    if(pid.mode != mode && mode == AUTOMATIC)
     {
         // Initialize a few PID parameters to new values
-        pid->iTerm = pid->output;
-        pid->lastInput = pid->input;
+        pid.iTerm = pid.output;
+        pid.lastInput = pid.input;
         
         // Constrain the integrator to make sure it does not exceed output bounds
-        pid->iTerm = CONSTRAIN( (pid->iTerm), (pid->outMin), (pid->outMax) );
+        pid.iTerm = CONSTRAIN( (pid.iTerm), (pid.outMin), (pid.outMax) );
     }
     
-    pid->mode = mode;
+    pid.mode = mode;
 }
 
 void 
-PIDOutputLimitsSet(PIDControl *pid, float min, float max) 							  							  
+PIDOutputLimitsSet(float min, float max)
 {
     // Check if the parameters are valid
     if(min >= max)
@@ -133,19 +129,19 @@ PIDOutputLimitsSet(PIDControl *pid, float min, float max)
     }
     
     // Save the parameters
-    pid->outMin = min;
-    pid->outMax = max;
+    pid.outMin = min;
+    pid.outMax = max;
     
     // If in automatic, apply the new constraints
-    if(pid->mode == AUTOMATIC)
+    if(pid.mode == AUTOMATIC)
     {
-        pid->output = CONSTRAIN(pid->output, min, max);
-        pid->iTerm  = CONSTRAIN(pid->iTerm,  min, max);
+        pid.output = CONSTRAIN(pid.output, min, max);
+        pid.iTerm  = CONSTRAIN(pid.iTerm,  min, max);
     }
 }
 
 void 
-PIDTuningsSet(PIDControl *pid, float kp, float ki, float kd)         	                                         
+PIDTuningsSet(float kp, float ki, float kd)
 {
     // Check if the parameters are valid
     if(kp < 0.0f || ki < 0.0f || kd < 0.0f)
@@ -154,72 +150,167 @@ PIDTuningsSet(PIDControl *pid, float kp, float ki, float kd)
     }
     
     // Save the parameters for displaying purposes
-    pid->dispKp = kp;
-    pid->dispKi = ki;
-    pid->dispKd = kd;
+    pid.dispKp = kp;
+    pid.dispKi = ki;
+    pid.dispKd = kd;
     
     // Alter the parameters for PID
-    pid->alteredKp = kp;
-    pid->alteredKi = ki * pid->sampleTime;
-    pid->alteredKd = kd / pid->sampleTime;
+    pid.alteredKp = kp;
+    pid.alteredKi = ki * pid.sampleTime;
+    pid.alteredKd = kd / pid.sampleTime;
     
     // Apply reverse direction to the altered values if necessary
-    if(pid->controllerDirection == REVERSE)
+    if(pid.controllerDirection == REVERSE)
     {
-        pid->alteredKp = -(pid->alteredKp);
-        pid->alteredKi = -(pid->alteredKi);
-        pid->alteredKd = -(pid->alteredKd);
+        pid.alteredKp = -(pid.alteredKp);
+        pid.alteredKi = -(pid.alteredKi);
+        pid.alteredKd = -(pid.alteredKd);
     }
 }
 
 void 
-PIDTuningKpSet(PIDControl *pid, float kp)
+PIDTuningKpSet(float kp)
 {
-    PIDTuningsSet(pid, kp, pid->dispKi, pid->dispKd);
+    PIDTuningsSet(kp, pid.dispKi, pid.dispKd);
 }
 
 void 
-PIDTuningKiSet(PIDControl *pid, float ki)
+PIDTuningKiSet(float ki)
 {
-    PIDTuningsSet(pid, pid->dispKp, ki, pid->dispKd);
+    PIDTuningsSet(pid.dispKp, ki, pid.dispKd);
 }
 
 void 
-PIDTuningKdSet(PIDControl *pid, float kd)
+PIDTuningKdSet(float kd)
 {
-    PIDTuningsSet(pid, pid->dispKp, pid->dispKi, kd);
+    PIDTuningsSet(pid.dispKp, pid.dispKi, kd);
 }
 
 void 
-PIDControllerDirectionSet(PIDControl *pid, PIDDirection controllerDirection)	  									  									  									  
+PIDControllerDirectionSet(PIDDirection controllerDirection)
 {
     // If in automatic mode and the controller's sense of direction is reversed
-    if(pid->mode == AUTOMATIC && controllerDirection == REVERSE)
+    if(pid.mode == AUTOMATIC && controllerDirection == REVERSE)
     {
         // Reverse sense of direction of PID gain constants
-        pid->alteredKp = -(pid->alteredKp);
-        pid->alteredKi = -(pid->alteredKi);
-        pid->alteredKd = -(pid->alteredKd);
+        pid.alteredKp = -(pid.alteredKp);
+        pid.alteredKi = -(pid.alteredKi);
+        pid.alteredKd = -(pid.alteredKd);
     }
     
-    pid->controllerDirection = controllerDirection;
+    pid.controllerDirection = controllerDirection;
 }
 
 void 
-PIDSampleTimeSet(PIDControl *pid, float sampleTimeSeconds)                                                       									  									  									   
+PIDSampleTimeSet(float sampleTimeSeconds)
 {
     float ratio;
 
     if(sampleTimeSeconds > 0.0f)
     {
         // Find the ratio of change and apply to the altered values
-        ratio = sampleTimeSeconds / pid->sampleTime;
-        pid->alteredKi *= ratio;
-        pid->alteredKd /= ratio;
+        ratio = sampleTimeSeconds / pid.sampleTime;
+        pid.alteredKi *= ratio;
+        pid.alteredKd /= ratio;
         
         // Save the new sampling time
-        pid->sampleTime = sampleTimeSeconds;
+        pid.sampleTime = sampleTimeSeconds;
     }
+}
+
+void PIDSetpointSet(float setpoint) { pid.setpoint = setpoint; }
+
+//
+// PID Input Set
+// Description:
+//      Should be called before calling PIDCompute so the PID controller will
+//      have an updated input value to work with.
+// Parameters:
+//      pid - The address of a PIDControl instantiation.
+//      input - The value the controller will work with.
+// Returns:
+//      Nothing.
+//
+void PIDInputSet(float input) { pid.input = input; }
+
+//
+// PID Output Get
+// Description:
+//      Typically, this function is called after PIDCompute in order to
+//      retrieve the output of the controller.
+// Parameters:
+//      pid - The address of a PIDControl instantiation.
+// Returns:
+//      The output of the specific PID controller.
+//
+float PIDOutputGet(void);
+
+//
+// PID Proportional Gain Constant Get
+// Description:
+//      Returns the proportional gain constant value the particular
+//      controller is set to.
+// Parameters:
+//      pid - The address of a PIDControl instantiation.
+// Returns:
+//      The proportional gain constant.
+//
+float PIDKpGet(void) { return pid.dispKp; }
+
+//
+// PID Integral Gain Constant Get
+// Description:
+//      Returns the integral gain constant value the particular
+//      controller is set to.
+// Parameters:
+//      pid - The address of a PIDControl instantiation.
+// Returns:
+//      The integral gain constant.
+//
+float PIDKiGet(void) { return pid.dispKi; }
+
+//
+// PID Derivative Gain Constant Get
+// Description:
+//      Returns the derivative gain constant value the particular
+//      controller is set to.
+// Parameters:
+//      pid - The address of a PIDControl instantiation.
+// Returns:
+//      The derivative gain constant.
+//
+float PIDKdGet(void) { return pid.dispKd; }
+
+//
+// PID Mode Get
+// Description:
+//      Returns the mode the particular controller is set to.
+// Parameters:
+//      pid - The address of a PIDControl instantiation.
+// Returns:
+//      MANUAL or AUTOMATIC depending on what the user set the
+//      controller to.
+//
+PIDMode PIDModeGet(void) { return pid.mode; }
+
+//
+// PID Direction Get
+// Description:
+//      Returns the direction the particular controller is set to.
+// Parameters:
+//      pid - The address of a PIDControl instantiation.
+// Returns:
+//      DIRECT or REVERSE depending on what the user set the
+//      controller to.
+//
+ PIDDirection PIDDirectionGet(void)
+ {
+	 return pid.controllerDirection;
+ }
+
+float PIDOutputGet(void)
+{
+	return pid.output;
 }
 
 

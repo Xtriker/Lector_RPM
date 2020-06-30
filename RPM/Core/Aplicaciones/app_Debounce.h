@@ -27,4 +27,4 @@
 	#include "stm32f1xx_hal_gpio.h"
 #endif
 
-extern uint8_t app_Debounces(void);
+extern uint8_t app_Debounce(void);

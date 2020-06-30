@@ -12,7 +12,7 @@
 #include <math.h>
 #include "../Aplicaciones/app_Despliegue.h"
 #include "../Aplicaciones/app_Frecuencia.h"
-#include "../Aplicaciones/app_PID.h"
+#include "../Aplicaciones/pid_controller.h"
 #include "../Aplicaciones/app_Encoder.h"
 
 #endif /* LIBRERIAS_H_ */

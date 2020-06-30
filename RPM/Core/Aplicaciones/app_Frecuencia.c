@@ -65,6 +65,15 @@ uint16_t app_CalculoRPM(uint16_t promedio)
 	return RPM;
 }
 
+uint16_t app_LecturaPulsos(void)
+{
+	volatile uint16_t Lectura = 0;
+	HAL_TIM_Base_Start_IT(&htim2);
+	return Lectura = app_ConteoFrecuencia();
+	HAL_TIM_Base_Stop_IT(&htim2);
+
+}
+
 void app_Tacometro(void)
 {
 	volatile uint8_t boton_evento,division = 1;
@@ -128,7 +137,7 @@ void app_Tacometro(void)
 			}
 			else
 			{
-				app_Despliegue(RPM);
+				app_Despliegue(RPM, Anodo);
 				HAL_TIM_Base_Stop_IT(&htim2);
 				seleccion = Cuenta;
 			}

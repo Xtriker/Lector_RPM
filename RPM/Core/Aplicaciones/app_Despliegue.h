@@ -14,6 +14,12 @@
 #include <stdio.h>
 #include "main.h"
 
+enum
+{
+	Anodo,
+	Catodo
+}Tipo;
+
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador
  * colcar el suyo en la lista de abajo
@@ -30,9 +36,9 @@
 
 /* Funciones externas */
 
-extern void app_Despliegue(uint16_t Numero);
-extern void app_SeleccionDisplay(uint8_t Display);
-extern void app_FloatADisplay(float NumeroFlotante);
-extern void app_LetrasADisplay(char Letras);
+extern void app_Despliegue(uint16_t Numero,uint8_t TipoDisplay);
+extern void app_SeleccionDisplay(uint8_t Display,uint8_t TipoDisplay);
+extern void app_FloatADisplay(float NumeroFlotante,uint8_t TipoDisplay);
+//extern void app_LetrasADisplay(char Letras);
 
 

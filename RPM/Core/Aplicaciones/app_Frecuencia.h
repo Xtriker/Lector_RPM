@@ -13,7 +13,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "main.h"
-#include "app_PID.h"
+
+#include "app_SpindleController.h"
 
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador
@@ -35,4 +36,5 @@
 
 extern uint32_t app_LecturaFrecuencia(void);
 extern void app_Tacometro(void);
+extern uint16_t app_LecturaPulsos(void);
 #endif /* APP_FRECUENCIA_H_ */

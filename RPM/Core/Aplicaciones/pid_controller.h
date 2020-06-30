@@ -57,6 +57,7 @@ extern "C"
 // Macros and Globals
 //*********************************************************************************
 
+
 typedef enum
 {
     MANUAL,
@@ -143,6 +144,7 @@ typedef struct
 }
 PIDControl;
 
+
 //*********************************************************************************
 // Prototypes
 //*********************************************************************************
@@ -168,12 +170,13 @@ PIDControl;
 //      controllerDirection - The sense of direction of the controller
 //                            DIRECT:  A positive setpoint gives a positive output.
 //                            REVERSE: A positive setpoint gives a negative output.
+//
 // Returns:
 //      Nothing.
 // 
-extern void PIDInit(PIDControl *pid, float kp, float ki, float kd, 
-                    float sampleTimeSeconds, float minOutput, float maxOutput, 
-                    PIDMode mode, PIDDirection controllerDirection);     	
+extern void PIDInit(float kp, float ki, float kd,
+             float sampleTimeSeconds, float minOutput, float maxOutput,
+             PIDMode mode, PIDDirection controllerDirection);
 
 // 
 // PID Compute
@@ -183,10 +186,12 @@ extern void PIDInit(PIDControl *pid, float kp, float ki, float kd,
 //      before PIDCompute.
 // Parameters:
 //      pid - The address of a PIDControl instantiation.
+//		input - The input value of the mesument of the system
+//		setpoint - The value of the user
 // Returns:
 //      True if in AUTOMATIC. False if in MANUAL.
 //                     
-extern bool PIDCompute(PIDControl *pid); 
+extern bool PIDCompute(void);
 
 // 
 // PID Mode Set
@@ -202,7 +207,7 @@ extern bool PIDCompute(PIDControl *pid);
 // Returns:
 //      Nothing.
 //              
-extern void PIDModeSet(PIDControl *pid, PIDMode mode);                                                                                                                                       
+extern void PIDModeSet(PIDMode mode);
 
 // 
 // PID Output Limits Set
@@ -216,7 +221,7 @@ extern void PIDModeSet(PIDControl *pid, PIDMode mode);
 // Returns:
 //      Nothing.
 // 
-extern void PIDOutputLimitsSet(PIDControl *pid, float min, float max); 							  							  
+extern void PIDOutputLimitsSet(float min, float max);
 
 // 
 // PID Tunings Set
@@ -230,7 +235,7 @@ extern void PIDOutputLimitsSet(PIDControl *pid, float min, float max);
 // Returns:
 //      Nothing.
 // 
-extern void PIDTuningsSet(PIDControl *pid, float kp, float ki, float kd);         	                                         
+extern void PIDTuningsSet(float kp, float ki, float kd);
 
 // 
 // PID Tuning Gain Constant P Set
@@ -242,7 +247,7 @@ extern void PIDTuningsSet(PIDControl *pid, float kp, float ki, float kd);
 // Returns:
 //      Nothing.
 // 
-extern void PIDTuningKpSet(PIDControl *pid, float kp);
+extern void PIDTuningKpSet(float kp);
 
 // 
 // PID Tuning Gain Constant I Set
@@ -254,7 +259,7 @@ extern void PIDTuningKpSet(PIDControl *pid, float kp);
 // Returns:
 //      Nothing.
 // 
-extern void PIDTuningKiSet(PIDControl *pid, float ki);
+extern void PIDTuningKiSet(float ki);
 
 // 
 // PID Tuning Gain Constant D Set
@@ -266,7 +271,7 @@ extern void PIDTuningKiSet(PIDControl *pid, float ki);
 // Returns:
 //      Nothing.
 // 
-extern void PIDTuningKdSet(PIDControl *pid, float kd);
+extern void PIDTuningKdSet(float kd);
 
 // 
 // PID Controller Direction Set
@@ -280,8 +285,7 @@ extern void PIDTuningKdSet(PIDControl *pid, float kd);
 // Returns:
 //      Nothing.
 // 
-extern void PIDControllerDirectionSet(PIDControl *pid, 
-                                      PIDDirection controllerDirection);	  									  									  									  
+extern void PIDControllerDirectionSet(PIDDirection controllerDirection);
 
 // 
 // PID Sample Time Set
@@ -293,7 +297,7 @@ extern void PIDControllerDirectionSet(PIDControl *pid,
 // Returns:
 //      Nothing.
 // 
-extern void PIDSampleTimeSet(PIDControl *pid, float sampleTimeSeconds);                                                       									  									  									   
+extern void PIDSampleTimeSet(float sampleTimeSeconds);
 
 // 
 // Basic Set and Get Functions for PID Parameters
@@ -309,10 +313,11 @@ extern void PIDSampleTimeSet(PIDControl *pid, float sampleTimeSeconds);
 // Returns:
 //      Nothing.
 // 
-inline void 
-PIDSetpointSet(PIDControl *pid, float setpoint) { pid->setpoint = setpoint; }
 
-// 
+
+extern void PIDSetpointSet(float setpoint);
+
+//
 // PID Input Set
 // Description:
 //      Should be called before calling PIDCompute so the PID controller will
@@ -322,11 +327,10 @@ PIDSetpointSet(PIDControl *pid, float setpoint) { pid->setpoint = setpoint; }
 //      input - The value the controller will work with.
 // Returns:
 //      Nothing.
-// 
-inline void 
-PIDInputSet(PIDControl *pid, float input) { pid->input = input; }
+//
+extern void PIDInputSet(float input);
 
-// 
+//
 // PID Output Get
 // Description:
 //      Typically, this function is called after PIDCompute in order to
@@ -335,11 +339,10 @@ PIDInputSet(PIDControl *pid, float input) { pid->input = input; }
 //      pid - The address of a PIDControl instantiation.
 // Returns:
 //      The output of the specific PID controller.
-// 
-inline float 
-PIDOutputGet(PIDControl *pid) { return pid->output; }
+//
+extern float PIDOutputGet(void);
 
-// 
+//
 // PID Proportional Gain Constant Get
 // Description:
 //      Returns the proportional gain constant value the particular
@@ -348,11 +351,10 @@ PIDOutputGet(PIDControl *pid) { return pid->output; }
 //      pid - The address of a PIDControl instantiation.
 // Returns:
 //      The proportional gain constant.
-// 
-inline float 
-PIDKpGet(PIDControl *pid) { return pid->dispKp; }						  
+//
+extern float PIDKpGet(void);
 
-// 
+//
 // PID Integral Gain Constant Get
 // Description:
 //      Returns the integral gain constant value the particular
@@ -361,11 +363,10 @@ PIDKpGet(PIDControl *pid) { return pid->dispKp; }
 //      pid - The address of a PIDControl instantiation.
 // Returns:
 //      The integral gain constant.
-// 
-inline float 
-PIDKiGet(PIDControl *pid) { return pid->dispKi; }						  
+//
+extern float PIDKiGet(void);
 
-// 
+//
 // PID Derivative Gain Constant Get
 // Description:
 //      Returns the derivative gain constant value the particular
@@ -374,24 +375,22 @@ PIDKiGet(PIDControl *pid) { return pid->dispKi; }
 //      pid - The address of a PIDControl instantiation.
 // Returns:
 //      The derivative gain constant.
-// 
-inline float 
-PIDKdGet(PIDControl *pid) { return pid->dispKd; }						  
+//
+extern float PIDKdGet(void);
 
-// 
+//
 // PID Mode Get
 // Description:
 //      Returns the mode the particular controller is set to.
 // Parameters:
 //      pid - The address of a PIDControl instantiation.
 // Returns:
-//      MANUAL or AUTOMATIC depending on what the user set the 
+//      MANUAL or AUTOMATIC depending on what the user set the
 //      controller to.
-// 
-inline PIDMode 
-PIDModeGet(PIDControl *pid) { return pid->mode; }						  
+//
+extern PIDMode PIDModeGet(void);
 
-// 
+//
 // PID Direction Get
 // Description:
 //      Returns the direction the particular controller is set to.
@@ -400,9 +399,18 @@ PIDModeGet(PIDControl *pid) { return pid->mode; }
 // Returns:
 //      DIRECT or REVERSE depending on what the user set the
 //      controller to.
-// 
-inline PIDDirection 
-PIDDirectionGet(PIDControl *pid) { return pid->controllerDirection; }		
+//
+extern PIDDirection PIDDirectionGet(void);
+
+//
+// PID Output Get
+// Description:
+//     Obten el valor de salida del controlador PID
+// Returns:
+//      Valor floante de la estructura pid
+//
+//
+extern float PIDOutputGet(void);
 
 
 // 
