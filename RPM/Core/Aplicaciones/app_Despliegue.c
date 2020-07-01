@@ -12,7 +12,7 @@ uint8_t Bandera[]={0,0,0};
 
 
 /* Conversion del valor numerico para 7 segmentos */
-void app_NumeroA7Segmentos(uint8_t Numero,uint8_t TipoDisplay)
+void app_NumeroA7Segmentos(uint32_t Numero,uint8_t TipoDisplay)
 {
 	switch(TipoDisplay)
 	{
@@ -360,13 +360,13 @@ void app_SeleccionDisplay(uint8_t Display, uint8_t TipoDisplay)
 }
 
 /* Separacion de numero en unidades, decenas, centenas ... */
-void app_Despliegue(uint16_t Numero,uint8_t TipoDisplay)
+void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 {
-	uint8_t Primero  =  Numero % 10;
-	uint8_t Segundo =  ( Numero - Primero ) % 100 / 10;
-	uint8_t Tercero  =  ( Numero - Primero - Segundo ) % 1000 / 100;
-	uint8_t Cuarto =  ( Numero - Primero - Segundo - Tercero ) % 10000 / 1000;
-	uint8_t Quinto = (Numero - Primero - Segundo - Tercero - Cuarto) % 100000 / 10000;
+	uint32_t Primero  =  Numero % 10;
+	uint32_t Segundo =  ( Numero - Primero ) % 100 / 10;
+	uint32_t Tercero  =  ( Numero - Primero - Segundo ) % 1000 / 100;
+	uint32_t Cuarto =  ( Numero - Primero - Segundo - Tercero ) % 10000 / 1000;
+	uint32_t Quinto = (Numero - Primero - Segundo - Tercero - Cuarto) % 100000 / 10000;
 		if(TipoDisplay == Anodo)
 		{
 			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
@@ -494,6 +494,41 @@ void app_FloatADisplay(float NumeroFlotante,uint8_t TipoDisplay)
 
 }
 
+void app_IndicadorEstadoActual(uint8_t Display)
+{
+	switch(Aumento)
+	{
+		case 0:
+		{
+			app_SeleccionDisplay(0, Catodo);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}break;
+		case 1:
+		{
+			app_SeleccionDisplay(1, Catodo);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}break;
+		case 2:
+		{
+			app_SeleccionDisplay(2, Catodo);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}break;
+		case 3:
+		{
+			app_SeleccionDisplay(3, Catodo);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}break;
+		case 4:
+		{
+			app_SeleccionDisplay(0, Catodo);
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}break;
+		default:
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		}
+	}
+}
 /* Impresion de letras en display de 7 segmentos */
 //void app_LetrasADisplay(char Letras)
 //{

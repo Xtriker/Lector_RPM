@@ -37,7 +37,6 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern uint8_t Aumento;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -47,7 +46,7 @@ extern uint8_t Aumento;
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+extern uint8_t Aumento;
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

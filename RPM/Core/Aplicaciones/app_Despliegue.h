@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include "main.h"
 
-enum
+typedef enum
 {
 	Anodo,
 	Catodo
@@ -36,8 +36,9 @@ enum
 
 /* Funciones externas */
 
-extern void app_Despliegue(uint16_t Numero,uint8_t TipoDisplay);
+extern void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay);
 extern void app_SeleccionDisplay(uint8_t Display,uint8_t TipoDisplay);
+//extern void app_IndicadorEstadoActual(uint8_t Display);
 extern void app_FloatADisplay(float NumeroFlotante,uint8_t TipoDisplay);
 //extern void app_LetrasADisplay(char Letras);
 

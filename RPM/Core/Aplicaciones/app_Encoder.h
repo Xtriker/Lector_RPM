@@ -11,12 +11,13 @@
 
 #include "main.h"
 
+
 LPTIM_HandleTypeDef hlptim1;
 
 extern uint8_t app_LecturaEncoder(void);
 extern void app_SeleccionEncoder(void);
 
 /* Variables gloables */
-extern uint16_t Primero,Segundo,Tercero,Cuarto,Total;
-
+extern uint16_t Segundo,Tercero,Cuarto;
+extern uint32_t Primero,Total;
 #endif /* APP_ENCODER_H_ */

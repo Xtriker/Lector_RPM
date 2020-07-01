@@ -64,15 +64,21 @@ static void MX_LPTIM1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* Variables globales */
-
+Tipo cambio;
 uint8_t Aumento = 0;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 {
 	if(GPIO_pin == Boton_encoder_Pin)
 	{
-		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-		Aumento++;
-
+		if(Aumento > 4)
+		{
+			Aumento = 0;
+		}
+		else
+		{
+			HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+			Aumento++;
+		}
 	}
 	else
 	{
@@ -142,7 +148,11 @@ int main(void)
 		  PIDInputSet(Mesument);
 		  PIDCompute();
 		  Valor = PIDOutputGet();
+
 		  app_SeleccionEncoder();
+		  //app_IndicadorEstadoActual(Catodo);
+		  app_Despliegue(Total, Catodo);
+
 		  printf("Valor: %d PID: %f\r \n",Total,Valor);
 
 
