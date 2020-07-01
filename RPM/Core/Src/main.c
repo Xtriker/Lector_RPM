@@ -150,7 +150,7 @@ int main(void)
 		  Valor = PIDOutputGet();
 
 		  app_SeleccionEncoder();
-		  //app_IndicadorEstadoActual(Catodo);
+
 		  app_Despliegue(Total, Catodo);
 
 		  printf("Valor: %d PID: %f\r \n",Total,Valor);

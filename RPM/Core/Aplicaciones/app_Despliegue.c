@@ -377,6 +377,7 @@ void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 		}
 		app_SeleccionDisplay(0, TipoDisplay);
 		app_NumeroA7Segmentos(Quinto,TipoDisplay);
+
 		HAL_Delay(1);
 		app_SeleccionDisplay(1, TipoDisplay);
 		app_NumeroA7Segmentos(Cuarto,TipoDisplay);
