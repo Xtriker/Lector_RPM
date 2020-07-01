@@ -335,6 +335,7 @@ void app_SeleccionDisplay(uint8_t Display, uint8_t TipoDisplay)
 							HAL_GPIO_WritePin(Display_2_GPIO_Port, Display_2_Pin, 1);
 							HAL_GPIO_WritePin(Display_3_GPIO_Port, Display_3_Pin, 0);
 							HAL_GPIO_WritePin(Display_4_GPIO_Port, Display_4_Pin, 1);
+						}break;
 					case 4:
 						{
 							HAL_GPIO_WritePin(Display_0_GPIO_Port, Display_0_Pin, 1);
@@ -349,6 +350,7 @@ void app_SeleccionDisplay(uint8_t Display, uint8_t TipoDisplay)
 
 					}
 			}
+
 		}break;
 		default:
 		{
@@ -365,49 +367,84 @@ void app_Despliegue(uint16_t Numero,uint8_t TipoDisplay)
 	uint8_t Tercero  =  ( Numero - Primero - Segundo ) % 1000 / 100;
 	uint8_t Cuarto =  ( Numero - Primero - Segundo - Tercero ) % 10000 / 1000;
 	uint8_t Quinto = (Numero - Primero - Segundo - Tercero - Cuarto) % 100000 / 10000;
-
-		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		if(TipoDisplay == Anodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}
+		else if(TipoDisplay == Catodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		}
 		app_SeleccionDisplay(0, TipoDisplay);
 		app_NumeroA7Segmentos(Quinto,TipoDisplay);
-		HAL_Delay(3);
+		HAL_Delay(1);
 		app_SeleccionDisplay(1, TipoDisplay);
 		app_NumeroA7Segmentos(Cuarto,TipoDisplay);
-		HAL_Delay(3);
+		HAL_Delay(1);
 		app_SeleccionDisplay(2, TipoDisplay);
 		app_NumeroA7Segmentos(Tercero,TipoDisplay);
-		HAL_Delay(3);
+		HAL_Delay(1);
 		app_SeleccionDisplay(3, TipoDisplay);
 		app_NumeroA7Segmentos(Segundo,TipoDisplay);
-		HAL_Delay(3);
+		HAL_Delay(1);
 		app_SeleccionDisplay(4, TipoDisplay);
 		app_NumeroA7Segmentos(Primero,TipoDisplay);
-		HAL_Delay(3);
+		HAL_Delay(1);
 		if(Bandera[0] == 1)
 		{
 			app_SeleccionDisplay(0, TipoDisplay);
-			app_NumeroA7Segmentos(Cuarto,TipoDisplay);
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			app_NumeroA7Segmentos(Quinto,TipoDisplay);
+			if(TipoDisplay == Anodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			}
+			else if(TipoDisplay == Catodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+			}
+
 			HAL_Delay(3);
 		}
 		if(Bandera[1] == 1)
 		{
 			app_SeleccionDisplay(1, TipoDisplay);
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
-			app_NumeroA7Segmentos(Tercero,TipoDisplay);
+			if(TipoDisplay == Anodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			}
+			else if(TipoDisplay == Catodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+			}
+			app_NumeroA7Segmentos(Cuarto,TipoDisplay);
 			HAL_Delay(3);
 		}
 		if(Bandera[2] == 1)
 		{
 			app_SeleccionDisplay(2, TipoDisplay);
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
-			app_NumeroA7Segmentos(Segundo,TipoDisplay);
+			if(TipoDisplay == Anodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			}
+			else if(TipoDisplay == Catodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+			}
+			app_NumeroA7Segmentos(Tercero,TipoDisplay);
 			HAL_Delay(3);
 		}
 		if(Bandera[3] == 1)
 		{
 			app_SeleccionDisplay(3, TipoDisplay);
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
-			app_NumeroA7Segmentos(Primero,TipoDisplay);
+			if(TipoDisplay == Anodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+			}
+			else if(TipoDisplay == Catodo)
+			{
+				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+			}
+			app_NumeroA7Segmentos(Segundo,TipoDisplay);
 			HAL_Delay(3);
 		}
 
@@ -427,7 +464,7 @@ void app_FloatADisplay(float NumeroFlotante,uint8_t TipoDisplay)
 			Bandera[1] = 0;
 			Bandera[2] = 0;
 			Bandera[3] = 0;
-			Numero = NumeroFlotante * 1000;
+			Numero = NumeroFlotante * 10000;
 		}
 	else if( (NumeroFlotante > 10.0) && (NumeroFlotante < 100.0)) //54.87
 		{
@@ -435,7 +472,7 @@ void app_FloatADisplay(float NumeroFlotante,uint8_t TipoDisplay)
 			Bandera[1] = 1;
 			Bandera[2] = 0;
 			Bandera[3] = 0;
-			Numero = NumeroFlotante * 100; //5487
+			Numero = NumeroFlotante * 1000; //5487
 		}
 	else if( (NumeroFlotante > 100.0) && (NumeroFlotante < 1000.0))
 		{
@@ -443,7 +480,7 @@ void app_FloatADisplay(float NumeroFlotante,uint8_t TipoDisplay)
 			Bandera[1] = 0;
 			Bandera[2] = 1;
 			Bandera[3] = 0;
-			Numero = NumeroFlotante * 10;
+			Numero = NumeroFlotante * 100;
 		}
 	else if( (NumeroFlotante > 1000.0) && (NumeroFlotante < 10000.0))
 		{
@@ -451,7 +488,7 @@ void app_FloatADisplay(float NumeroFlotante,uint8_t TipoDisplay)
 			Bandera[1] = 0;
 			Bandera[2] = 0;
 			Bandera[3] = 1;
-			Numero = NumeroFlotante * 1;
+			Numero = NumeroFlotante * 10;
 		}
 	app_Despliegue(Numero, TipoDisplay);
 

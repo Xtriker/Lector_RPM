@@ -9,7 +9,7 @@
 
 
 /* Variables gloables */
-uint16_t Primero = 0,Segundo = 0,Tercero = 0,Cuarto = 0, Total = 0;
+uint16_t Primero = 0,Segundo = 0,Tercero = 0,Cuarto = 0,Quinto = 0, Total = 0;
 
 uint8_t app_LecturaEncoder(void)
 {
@@ -32,7 +32,7 @@ uint8_t app_LecturaEncoder(void)
 
 void app_SeleccionEncoder(void)
 {
-	if(Aumento > 3)
+	if(Aumento > 4)
 		  {
 			  Aumento = 0;
 		  }
@@ -42,23 +42,28 @@ void app_SeleccionEncoder(void)
 			  {
 				  case 0:
 				  {
-					  Primero = app_LecturaEncoder()*1000;
+					  Primero = app_LecturaEncoder()*10000;
 					  Total = Primero;
 				  }break;
 				  case 1:
 				  {
-					  Segundo = app_LecturaEncoder()*100;
+					  Segundo = app_LecturaEncoder()*1000;
 					  Total = Primero +Segundo;
 				  }break;
 				  case 2:
 				  {
-					  Tercero = app_LecturaEncoder()*10;
+					  Tercero = app_LecturaEncoder()*100;
 					  Total = Primero +Segundo+Tercero;
 				  }break;
 				  case 3:
 				  {
-					  Cuarto = app_LecturaEncoder()*1;
+					  Cuarto = app_LecturaEncoder()*10;
 					  Total = Primero +Segundo+Tercero+Cuarto;
+				  }break;
+				  case 4:
+				  {
+					  Quinto = app_LecturaEncoder()*1;
+					  Total = Primero +Segundo+Tercero+Cuarto+Quinto;
 				  }break;
 				  default:
 				  {

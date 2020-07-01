@@ -98,7 +98,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	/* Cambiando el intervalo de maximo y minimo obtendras un mejor rango de tiempo */
 	float minOutput = 1, maxOutput = 10,Valor = 0;
-	uint8_t  Mesument = 200;
+	uint8_t  Mesument = 200,Contador = 100;
 	PIDInit(0.1, 100, 2, 2, minOutput, maxOutput, AUTOMATIC, DIRECT);
   /* USER CODE END 1 */
 
@@ -134,15 +134,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		  Mesument = app_LecturaPulsos();
+	  	  //app_Despliegue(Total,Catodo);
+//		  Mesument = app_LecturaPulsos();
+	  	  Mesument = Contador;
+	  	  Contador = Contador + 1;
 		  PIDSetpointSet(Total);
 		  PIDInputSet(Mesument);
 		  PIDCompute();
 		  Valor = PIDOutputGet();
 		  app_SeleccionEncoder();
-		  //app_SeleccionDisplay(Display, Anodo);
-	 //	  app_Despliegue(Valor);
-		  printf("Valor: %f Entrada: %d Lectura: %d\r \n",Valor,Total,Mesument);
+		  printf("Valor: %d PID: %f\r \n",Total,Valor);
 
 
   }
@@ -348,14 +349,14 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, Segmento_B_Pin|Segmento_C_Pin|Segmento_E_Pin|Segmento_F_Pin 
-                          |Segmento_G_Pin|Segmento_H_Pin|Display_4_Pin, GPIO_PIN_RESET);
+                          |Segmento_G_Pin|Segmento_H_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, Segmento_D_Pin|SMPS_EN_Pin|SMPS_V1_Pin|Segmento_A_Pin 
-                          |Display_0_Pin|Display_1_Pin, GPIO_PIN_RESET);
+                          |Display_0_Pin|Display_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LD4_Pin|Display_3_Pin|Display_2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Display_3_Pin|LD4_Pin|Display_4_Pin|Display_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : Boton_azul_Pin */
   GPIO_InitStruct.Pin = Boton_azul_Pin;
@@ -364,25 +365,25 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(Boton_azul_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Segmento_B_Pin Segmento_C_Pin Segmento_E_Pin Segmento_F_Pin 
-                           Segmento_G_Pin Segmento_H_Pin Display_4_Pin */
+                           Segmento_G_Pin Segmento_H_Pin */
   GPIO_InitStruct.Pin = Segmento_B_Pin|Segmento_C_Pin|Segmento_E_Pin|Segmento_F_Pin 
-                          |Segmento_G_Pin|Segmento_H_Pin|Display_4_Pin;
+                          |Segmento_G_Pin|Segmento_H_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Segmento_D_Pin SMPS_EN_Pin SMPS_V1_Pin Segmento_A_Pin 
-                           Display_0_Pin Display_1_Pin */
+                           Display_0_Pin Display_2_Pin */
   GPIO_InitStruct.Pin = Segmento_D_Pin|SMPS_EN_Pin|SMPS_V1_Pin|Segmento_A_Pin 
-                          |Display_0_Pin|Display_1_Pin;
+                          |Display_0_Pin|Display_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD4_Pin Display_3_Pin Display_2_Pin */
-  GPIO_InitStruct.Pin = LD4_Pin|Display_3_Pin|Display_2_Pin;
+  /*Configure GPIO pins : Display_3_Pin LD4_Pin Display_4_Pin Display_1_Pin */
+  GPIO_InitStruct.Pin = Display_3_Pin|LD4_Pin|Display_4_Pin|Display_1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
