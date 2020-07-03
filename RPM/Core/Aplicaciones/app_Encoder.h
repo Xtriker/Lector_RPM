@@ -16,6 +16,7 @@ LPTIM_HandleTypeDef hlptim1;
 
 extern uint8_t app_LecturaEncoder(void);
 extern void app_SeleccionEncoder(void);
+extern void app_SeleccionarTiempo(void);
 
 /* Variables gloables */
 extern uint16_t Segundo,Tercero,Cuarto;

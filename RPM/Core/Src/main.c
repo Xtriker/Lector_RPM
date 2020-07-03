@@ -65,12 +65,12 @@ static void MX_LPTIM1_Init(void);
 /* USER CODE BEGIN 0 */
 /* Variables globales */
 Tipo cambio;
-uint8_t Aumento = 0;
+uint8_t Aumento = 0,Bandera_DetectorCero = 1;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 {
 	if(GPIO_pin == Boton_encoder_Pin)
 	{
-		if(Aumento > 4)
+		if(Aumento > 2)
 		{
 			Aumento = 0;
 		}
@@ -80,12 +80,31 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 			Aumento++;
 		}
 	}
+	if(GPIO_pin == DetectorCero_Pin)
+	{
+		Bandera_DetectorCero = 0;
+	}
 	else
 	{
 		/* No realiza ninguna funcion */
 	}
 }
 
+void app_CruceCero(uint32_t Tiempo)
+{
+	if(Bandera_DetectorCero == 0)
+	{
+		HAL_Delay(Tiempo);
+		HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
+		HAL_Delay(Tiempo);
+		HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
+		Bandera_DetectorCero = 1;
+	}
+	else
+	{
+
+	}
+}
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
  set to 'Yes') calls __io_putchar() */
@@ -103,9 +122,9 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	/* Cambiando el intervalo de maximo y minimo obtendras un mejor rango de tiempo */
-	float minOutput = 1, maxOutput = 10,Valor = 0;
-	uint8_t  Mesument = 200,Contador = 100;
-	PIDInit(0.1, 100, 2, 2, minOutput, maxOutput, AUTOMATIC, DIRECT);
+//	float minOutput = 1, maxOutput = 10,Valor = 0;
+//	uint8_t  Mesument = 200,Contador = 100;
+//	PIDInit(0.1, 100, 2, 2, minOutput, maxOutput, AUTOMATIC, DIRECT);
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -142,18 +161,19 @@ int main(void)
   {
 	  	  //app_Despliegue(Total,Catodo);
 //		  Mesument = app_LecturaPulsos();
-	  	  Mesument = Contador;
-	  	  Contador = Contador + 1;
-		  PIDSetpointSet(Total);
-		  PIDInputSet(Mesument);
-		  PIDCompute();
-		  Valor = PIDOutputGet();
+//	  	  Mesument = Contador;
+//	  	  Contador = Contador + 1;
+//		  PIDSetpointSet(Total);
+//		  PIDInputSet(Mesument);
+//		  PIDCompute();
+//		  Valor = PIDOutputGet();
 
-		  app_SeleccionEncoder();
-
+		  //app_SeleccionEncoder();
+		  app_SeleccionarTiempo();
 		  app_Despliegue(Total, Catodo);
+		  app_CruceCero(Total);
 
-		  printf("Valor: %d PID: %f\r \n",Total,Valor);
+		  //printf("Valor: %d PID: %f\r \n",Total,Valor);
 
 
   }
@@ -359,7 +379,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, Segmento_B_Pin|Segmento_C_Pin|Segmento_E_Pin|Segmento_F_Pin 
-                          |Segmento_G_Pin|Segmento_H_Pin, GPIO_PIN_RESET);
+                          |Segmento_G_Pin|Segmento_H_Pin|Tiempo_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, Segmento_D_Pin|SMPS_EN_Pin|SMPS_V1_Pin|Segmento_A_Pin 
@@ -368,16 +388,10 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, Display_3_Pin|LD4_Pin|Display_4_Pin|Display_1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : Boton_azul_Pin */
-  GPIO_InitStruct.Pin = Boton_azul_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(Boton_azul_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : Segmento_B_Pin Segmento_C_Pin Segmento_E_Pin Segmento_F_Pin 
-                           Segmento_G_Pin Segmento_H_Pin */
+                           Segmento_G_Pin Segmento_H_Pin Tiempo_Pin */
   GPIO_InitStruct.Pin = Segmento_B_Pin|Segmento_C_Pin|Segmento_E_Pin|Segmento_F_Pin 
-                          |Segmento_G_Pin|Segmento_H_Pin;
+                          |Segmento_G_Pin|Segmento_H_Pin|Tiempo_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -398,6 +412,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DetectorCero_Pin */
+  GPIO_InitStruct.Pin = DetectorCero_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(DetectorCero_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Detener_Pin */
   GPIO_InitStruct.Pin = Detener_Pin;
@@ -420,9 +440,6 @@ static void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

@@ -41,8 +41,8 @@ RPM.bin \
 all: RPM.elf secondary-outputs
 
 # Tool invocations
-RPM.elf: $(OBJS) $(USER_OBJS) /media/dario/Mis\ datos/Documentos/STM32_Workspace/Lector_RPM/RPM/STM32L412RBTXP_FLASH.ld
-	arm-none-eabi-gcc -o "RPM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/dario/Mis datos/Documentos/STM32_Workspace/Lector_RPM/RPM/STM32L412RBTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="RPM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+RPM.elf: $(OBJS) $(USER_OBJS) /Users/dario/Documents/STM32_Workspace/Lector_RPM/RPM/STM32L412RBTXP_FLASH.ld
+	arm-none-eabi-gcc -o "RPM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/dario/Documents/STM32_Workspace/Lector_RPM/RPM/STM32L412RBTXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="RPM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
