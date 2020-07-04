@@ -108,33 +108,21 @@ void app_SeleccionarTiempo(void)
 	  {
 		  case 0:
 		  {
-			  if(app_LecturaEncoder() > 1)
-			  {
-				  Primero = 0;
-				  ValorEncoder = 0;
-				  HAL_LPTIM_Encoder_Stop(&hlptim1);
-				  Total = Primero + Segundo;
-			  }
-			  else
-			  {
-				  Primero = app_LecturaEncoder() * 10;
+				  Primero = app_LecturaEncoder() * 100;
 				  Total = Primero;
-			  }
 		  }break;
 		  case 1:
 		  {
-			  if(Total > 15)
-			  {
-				  Segundo = 0;
-				  ValorEncoder = 0;
-				  HAL_LPTIM_Encoder_Stop(&hlptim1);
+
+				  Segundo = app_LecturaEncoder()*10;
 				  Total = Primero + Segundo;
-			  }
-			  {
-				  Segundo = app_LecturaEncoder()*1;
-				  Total = Primero + Segundo;
-			  }
 		  }break;
+		  case 3:
+		  		  {
+
+		  				  Tercero = app_LecturaEncoder()*1;
+		  				  Total = Primero + Segundo + Tercero;
+		  		  }break;
 //		  case 2:
 //		  {
 //
