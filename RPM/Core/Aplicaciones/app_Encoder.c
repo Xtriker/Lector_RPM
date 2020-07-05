@@ -101,45 +101,72 @@ void app_SeleccionEncoder(void)
 }
 
 
-void app_SeleccionarTiempo(void)
+float app_SeleccionarAngulo(void)
 {
-
+	volatile float Angulo = 0;
+	volatile uint8_t Prnumero = 0, Senumero = 0,Tenumero = 0;
 	  switch(Aumento)
 	  {
 		  case 0:
 		  {
-				  Primero = app_LecturaEncoder() * 100;
-				  Total = Primero;
+			  	  if(app_LecturaEncoder() > 1)
+			  	  {
+			  		 Primero = Primero - 1;
+			  		 Prnumero = 0;
+			  		 HAL_LPTIM_Encoder_Stop(&hlptim1);
+			  		 Angulo = Primero;
+			  		 Total = Prnumero;
+			  	  }
+			  	  else
+			  	  {
+			  		  Primero = app_LecturaEncoder();
+			  		  Prnumero = app_LecturaEncoder() * 100;
+			  		  Total = Prnumero;
+				  	  Angulo = Primero;
+			  	  }
 		  }break;
 		  case 1:
 		  {
-
-				  Segundo = app_LecturaEncoder()*10;
-				  Total = Primero + Segundo;
+			  if(Angulo > 18)
+			  {
+				 Segundo = Segundo - 1;
+				 Senumero = 0;
+				 HAL_LPTIM_Encoder_Stop(&hlptim1);
+				 Angulo = Primero + Segundo;
+				 Total = Prnumero + Senumero;
+			  }
+			  else
+			  {
+					  Segundo = app_LecturaEncoder();
+					  Senumero = app_LecturaBoton() * 10;
+					  Angulo = Primero + Segundo;
+					  Total = Senumero + Primero;
+			  }
 		  }break;
 		  case 3:
-		  		  {
-
-		  				  Tercero = app_LecturaEncoder()*1;
-		  				  Total = Primero + Segundo + Tercero;
-		  		  }break;
-//		  case 2:
-//		  {
-//
-//		  }break;
-//		  case 3:
-//		  {
-//
-//		  }break;
-//		  case 4:
-//		  {
-//
-//		  }break;
+		  {
+			  if(Angulo > 180)
+			  {
+				 Tercero = 0;
+				 Tenumero = 0;
+				 HAL_LPTIM_Encoder_Stop(&hlptim1);
+				 Angulo = Primero + Segundo + Tercero;
+				 Total = Prnumero + Senumero + Tenumero;
+			  }
+			  else
+			  {
+				  Tercero = app_LecturaEncoder();
+				  Tenumero = app_LecturaEncoder() * 1;
+				  Angulo = Primero + Segundo + Tercero;
+				  Total = Prnumero + Senumero + Tenumero;
+			  }
+		  	}break;
 		  default:
 		  {
 
 		  }
 	  }
+	  return Angulo;
 
 }
 uint8_t app_LecturaEncoder(void)

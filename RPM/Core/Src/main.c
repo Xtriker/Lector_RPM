@@ -33,6 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define Frecuencia_linea (uint8_t)60
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -90,41 +91,40 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 	}
 }
 
-uint8_t Espera(void)
+uint8_t Espera(uint8_t Tiempo)
 {
 	uint8_t Continua = 0;
 	volatile uint32_t Contador = htim2.Instance->CNT;
-
+	/* Si el contador a partir de 1000 cuentas se determina un valor de 1 ms */
+	/* Teniendo esto en encuenta es posible realizar una pequeña pausa para la activacion o desactivacion */
+	/* de cualquiera de los perifericos */
 	do
 	{
-		if(Contador > 999)
-			{
-				Continua++;
-				Contador = 0;
-			}
-		Contador = htim2.Instance->CNT;
-	}while(Continua < 4);
+		if(Contador > 1000)
+		{
+			Continua++;
+			Contador = 0;
+		}
+		else
+		{
+			Contador = htim2.Instance->CNT;
+		}
+	}while(Continua < Tiempo);
 
 	return true;
 }
-void app_CruceCero(uint32_t Tiempo)
+void app_CruceCero(uint8_t Angulo, uint8_t FrecuenciaLinea)
 {
-	volatile uint32_t Timer = htim2.Instance->CNT;
+	const uint8_t Periodo = (1/FrecuenciaLinea)/2;
+	volatile uint8_t Tiempo = ((Angulo*Periodo)/180)*1000;
 	if(Bandera_DetectorCero == 0)
 	{
-		if(Timer >= Tiempo)
-		{
+			Espera(Tiempo);
 			HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
-			Timer = 0;
-
-		}
-			Espera();
+			Espera(1);
 			HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
+			Espera(Tiempo);
 			Bandera_DetectorCero = 1;
-	}
-	else
-	{
-
 	}
 }
 #ifdef __GNUC__
@@ -147,6 +147,7 @@ int main(void)
 //	float minOutput = 1, maxOutput = 10,Valor = 0;
 //	uint8_t  Mesument = 200,Contador = 100;
 //	PIDInit(0.1, 100, 2, 2, minOutput, maxOutput, AUTOMATIC, DIRECT);
+	float Angulo = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -191,9 +192,9 @@ int main(void)
 //		  Valor = PIDOutputGet();
 
 		  //app_SeleccionEncoder();
-		  app_SeleccionarTiempo();
-		  app_Despliegue(Total, Catodo);
-		  app_CruceCero(Total);
+	  	  Angulo = app_SeleccionarAngulo();
+		  app_FloatADisplay(Angulo, Catodo);
+		  app_CruceCero(Total, Frecuencia_linea);
 
 		  //printf("Valor: %d PID: %f\r \n",Total,Valor);
 
@@ -235,9 +236,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
   RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 20;
+  RCC_OscInitStruct.PLL.PLLN = 45;
   RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -247,11 +248,11 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
