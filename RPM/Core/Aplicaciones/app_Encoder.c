@@ -101,74 +101,47 @@ void app_SeleccionEncoder(void)
 }
 
 
-float app_SeleccionarAngulo(void)
+void app_SeleccionarAngulo(void)
 {
-	volatile float Angulo = 0;
-	volatile uint8_t Prnumero = 0, Senumero = 0,Tenumero = 0;
+
 	  switch(Aumento)
 	  {
 		  case 0:
 		  {
-			  	  if(app_LecturaEncoder() > 1)
-			  	  {
-			  		 Primero = Primero - 1;
-			  		 Prnumero = 0;
-			  		 HAL_LPTIM_Encoder_Stop(&hlptim1);
-			  		 Angulo = Primero;
-			  		 Total = Prnumero;
-			  	  }
-			  	  else
-			  	  {
-			  		  Primero = app_LecturaEncoder();
-			  		  Prnumero = app_LecturaEncoder() * 100;
-			  		  Total = Prnumero;
-				  	  Angulo = Primero;
-			  	  }
+			  		  Primero = app_LecturaEncoder() * 10000;
+			  		  Total = Primero;
+
 		  }break;
 		  case 1:
 		  {
-			  if(Angulo > 18)
-			  {
-				 Segundo = Segundo - 1;
-				 Senumero = 0;
-				 HAL_LPTIM_Encoder_Stop(&hlptim1);
-				 Angulo = Primero + Segundo;
-				 Total = Prnumero + Senumero;
-			  }
-			  else
-			  {
-					  Segundo = app_LecturaEncoder();
-					  Senumero = app_LecturaBoton() * 10;
-					  Angulo = Primero + Segundo;
-					  Total = Senumero + Primero;
-			  }
+
+					  Segundo = app_LecturaEncoder() * 1000;
+					  Total = Segundo + Primero;
+
 		  }break;
 		  case 3:
 		  {
-			  if(Angulo > 180)
-			  {
-				 Tercero = 0;
-				 Tenumero = 0;
-				 HAL_LPTIM_Encoder_Stop(&hlptim1);
-				 Angulo = Primero + Segundo + Tercero;
-				 Total = Prnumero + Senumero + Tenumero;
-			  }
-			  else
-			  {
-				  Tercero = app_LecturaEncoder();
-				  Tenumero = app_LecturaEncoder() * 1;
-				  Angulo = Primero + Segundo + Tercero;
-				  Total = Prnumero + Senumero + Tenumero;
-			  }
+
+				  Tercero = app_LecturaEncoder() * 100;
+				  Total = Primero + Segundo + Tercero;
 		  	}break;
+		  case 4:
+   		  {
+				  Cuarto = app_LecturaEncoder() * 10;
+				  Total = Primero + Segundo + Tercero + Cuarto;
+		   	}break;
+	  	  	 case 5:
+	 		  {
+	  			  Quinto = app_LecturaEncoder() * 1;
+	  			  Total = Primero + Segundo + Tercero + Cuarto + Quinto;
+	  	  	}break;
 		  default:
 		  {
 
 		  }
 	  }
-	  return Angulo;
-
 }
+
 uint8_t app_LecturaEncoder(void)
 {
 	/* Inicia el Timer de bajo consumo */
