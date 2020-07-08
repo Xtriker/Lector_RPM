@@ -27,7 +27,7 @@ void app_SpindleController(void)
 				Periodo = 0; Tiempo = 0; Frecuencia = 0, RPM_ref = 0; Valor = 0;
 				boton_evento = 0;
 				/* Se inicializa el controlador PID */
-				PIDInit(0.1, 100, 2, 2, minOutput, maxOutput, AUTOMATIC, DIRECT);
+				PIDInit(66.2765, 4614.7793, 0.21131, 1, minOutput, maxOutput, AUTOMATIC, DIRECT);
 				cambio = Seleccion;
 			}break;
 		case Seleccion:
