@@ -53,7 +53,7 @@ extern uint8_t Aumento;
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-extern uint16_t app_ConteoFrecuencia(void);
+extern void app_CruceCero(uint16_t Tiempo);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

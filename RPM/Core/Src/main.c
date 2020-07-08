@@ -23,6 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <math.h>
+#include <stdio.h>
 #include "../Aplicaciones/Librerias.h"
 /* USER CODE END Includes */
 
@@ -33,13 +35,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define Frecuencia_linea (uint8_t)60
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-static float Periodo;
-static float Tiempo;
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -94,20 +94,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 	}
 }
 
-void app_CruceCero(uint8_t Angulo, uint8_t FrecuenciaLinea)
+void app_CruceCero(uint16_t Tiempo)
 {
 
-
-	Periodo = ((1/60)/2)*1000;
-	Tiempo = ((Angulo*Periodo)/180)*100;
 	if(Bandera_DetectorCero == 0)
 	{
-
-			delay_us(Total);
-			HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
-			delay_us(2);
+		if(Tiempo == 0)
+		{
 			HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
-			Bandera_DetectorCero = 1;
+		}
+		else
+		{
+				delay_us(Tiempo);
+				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
+				delay_us(2);
+				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
+				Bandera_DetectorCero = 1;
+		}
 	}
 }
 #ifdef __GNUC__
@@ -126,11 +129,6 @@ void app_CruceCero(uint8_t Angulo, uint8_t FrecuenciaLinea)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	/* Cambiando el intervalo de maximo y minimo obtendras un mejor rango de tiempo */
-//	float minOutput = 1, maxOutput = 10,Valor = 0;
-//	uint8_t  Mesument = 200,Contador = 100;
-//	PIDInit(0.1, 100, 2, 2, minOutput, maxOutput, AUTOMATIC, DIRECT);
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -167,22 +165,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  	  //app_Despliegue(Total,Catodo);
-//		  Mesument = app_LecturaPulsos();
-//	  	  Mesument = Contador;
-//	  	  Contador = Contador + 1;
-//		  PIDSetpointSet(Total);
-//		  PIDInputSet(Mesument);
-//		  PIDCompute();
-//		  Valor = PIDOutputGet();
-
-		  //app_SeleccionEncoder();
-	  	  app_SeleccionarAngulo();
-		  app_Despliegue(Total, Catodo);
-		  app_CruceCero(Total, Frecuencia_linea);
-
-		  printf("Angulo: %ld \r \n",Total);
-
 
   }
     /* USER CODE END WHILE */

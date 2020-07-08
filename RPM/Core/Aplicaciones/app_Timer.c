@@ -23,8 +23,10 @@ void delay_ms(uint16_t ms)
 
 void delay_us(uint16_t us)
 {
+	/* Selecciona el valor del Timer en 0, antes de iniciar */
 	__HAL_TIM_SET_COUNTER(&htim1,0);
 
 	while(__HAL_TIM_GET_COUNTER(&htim1) < us)
 	{}
+	/* Saldra del ciclo hasta que se complete el tiempo de la funcion antes mandada */
 }

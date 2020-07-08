@@ -77,8 +77,6 @@ uint16_t app_LecturaPulsos(void)
 void app_Tacometro(void)
 {
 	volatile uint8_t boton_evento,division = 1;
-	volatile uint32_t time = 0;
-	volatile uint16_t output = 0;
 	boton_evento = app_Debounce();
 	switch(seleccion)
 	{
