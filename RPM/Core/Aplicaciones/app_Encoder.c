@@ -100,6 +100,48 @@ void app_SeleccionEncoder(void)
 
 }
 
+
+void app_SeleccionarAngulo(void)
+{
+
+	  switch(Aumento)
+	  {
+		  case 0:
+		  {
+			  		  Primero = app_LecturaEncoder() * 10000;
+			  		  Total = Primero;
+
+		  }break;
+		  case 1:
+		  {
+
+					  Segundo = app_LecturaEncoder() * 1000;
+					  Total = Segundo + Primero;
+
+		  }break;
+		  case 3:
+		  {
+
+				  Tercero = app_LecturaEncoder() * 100;
+				  Total = Primero + Segundo + Tercero;
+		  	}break;
+		  case 4:
+   		  {
+				  Cuarto = app_LecturaEncoder() * 10;
+				  Total = Primero + Segundo + Tercero + Cuarto;
+		   	}break;
+	  	  	 case 5:
+	 		  {
+	  			  Quinto = app_LecturaEncoder() * 1;
+	  			  Total = Primero + Segundo + Tercero + Cuarto + Quinto;
+	  	  	}break;
+		  default:
+		  {
+
+		  }
+	  }
+}
+
 uint8_t app_LecturaEncoder(void)
 {
 	/* Inicia el Timer de bajo consumo */

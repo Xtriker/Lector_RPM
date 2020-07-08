@@ -53,13 +53,10 @@ extern uint8_t Aumento;
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-extern uint16_t app_ConteoFrecuencia(void);
+extern void app_CruceCero(uint16_t Tiempo);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define Boton_azul_Pin GPIO_PIN_13
-#define Boton_azul_GPIO_Port GPIOC
-#define Boton_azul_EXTI_IRQn EXTI15_10_IRQn
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOH
 #define Segmento_B_Pin GPIO_PIN_1
@@ -90,6 +87,9 @@ extern uint16_t app_ConteoFrecuencia(void);
 #define Segmento_G_GPIO_Port GPIOC
 #define Segmento_H_Pin GPIO_PIN_8
 #define Segmento_H_GPIO_Port GPIOC
+#define DetectorCero_Pin GPIO_PIN_9
+#define DetectorCero_GPIO_Port GPIOC
+#define DetectorCero_EXTI_IRQn EXTI9_5_IRQn
 #define Segmento_A_Pin GPIO_PIN_8
 #define Segmento_A_GPIO_Port GPIOA
 #define Display_0_Pin GPIO_PIN_12
@@ -102,6 +102,8 @@ extern uint16_t app_ConteoFrecuencia(void);
 #define Display_2_GPIO_Port GPIOA
 #define Detener_Pin GPIO_PIN_10
 #define Detener_GPIO_Port GPIOC
+#define Tiempo_Pin GPIO_PIN_11
+#define Tiempo_GPIO_Port GPIOC
 #define SWO_Pin GPIO_PIN_3
 #define SWO_GPIO_Port GPIOB
 #define Display_1_Pin GPIO_PIN_5

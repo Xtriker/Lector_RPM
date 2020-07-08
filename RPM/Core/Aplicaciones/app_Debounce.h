@@ -12,6 +12,7 @@
 #include "main.h"
 #include "../stm32l4xx_hal_gpio.h"
 #include "../stm32l4xx_hal_tim.h"
+#include "../Aplicaciones/app_Timer.h"
 
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador

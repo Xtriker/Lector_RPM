@@ -16,7 +16,7 @@ Presionado_boton estado = NO_PRESIONADO;
 uint8_t boton = 0,contador = 0;
 void app_LecturaBoton(void)
 {
-		HAL_Delay(5);
+		delay_ms(7);
 		boton = HAL_GPIO_ReadPin(Detener_GPIO_Port, Detener_Pin);
 		if(boton == 0)
 		{

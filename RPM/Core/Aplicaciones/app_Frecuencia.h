@@ -37,4 +37,5 @@
 extern uint32_t app_LecturaFrecuencia(void);
 extern void app_Tacometro(void);
 extern uint16_t app_LecturaPulsos(void);
+extern uint16_t app_CalculoRPM(uint16_t promedio);
 #endif /* APP_FRECUENCIA_H_ */
