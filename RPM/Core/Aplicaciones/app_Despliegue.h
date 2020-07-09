@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include "main.h"
+#include "app_Timer.h"
 
 typedef enum
 {

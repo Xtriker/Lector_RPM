@@ -74,7 +74,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 {
 	if(GPIO_pin == Boton_encoder_Pin)
 	{
-		if(Aumento > 5)
+		if(Aumento >= 6)
 		{
 			Aumento = 0;
 		}
@@ -96,7 +96,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 
 void app_CruceCero(uint16_t Tiempo)
 {
-
+	//app_Despliegue(Tiempo, Catodo);
 	if(Bandera_DetectorCero == 0)
 	{
 		if(Tiempo == 0)
@@ -107,7 +107,7 @@ void app_CruceCero(uint16_t Tiempo)
 		{
 				delay_us(Tiempo);
 				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
-				delay_us(2);
+				delay_ms(1);
 				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
 				Bandera_DetectorCero = 1;
 		}
@@ -163,10 +163,36 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  typedef enum{
+	  Inicio,
+	  Dimmer
+  }prueba;
+
+  prueba siguiente_estado;
+  siguiente_estado = Inicio;
+
+  uint16_t Tiempo = 231;
   while (1)
   {
+	  switch(siguiente_estado)
+	  {
+		  case Inicio:
+		  {
+			  app_Despliegue(Tiempo, Catodo);
+			  siguiente_estado = Dimmer;
+		  }
+		  break;
+		  case Dimmer:
+		  {
+			  app_CruceCero(Tiempo);
+			  siguiente_estado = Inicio;
+		  }break;
+		  default:
+		  {
 
-	  app_CruceCero(2);
+		  }
+	  }
+
   }
     /* USER CODE END WHILE */
 
