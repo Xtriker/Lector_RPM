@@ -166,6 +166,7 @@ int main(void)
   while (1)
   {
 
+	  app_CruceCero(2);
   }
     /* USER CODE END WHILE */
 
@@ -452,7 +453,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : DetectorCero_Pin */
   GPIO_InitStruct.Pin = DetectorCero_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(DetectorCero_GPIO_Port, &GPIO_InitStruct);
 
