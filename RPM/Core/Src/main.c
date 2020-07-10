@@ -26,6 +26,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "../Aplicaciones/Librerias.h"
+#include "../Aplicaciones/app_DigitalDimmer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,7 +100,11 @@ void app_CruceCero(uint16_t Tiempo)
 	//app_Despliegue(Tiempo, Catodo);
 	if(Bandera_DetectorCero == 0)
 	{
-		if(Tiempo == 0)
+		if(Tiempo < 200)
+		{
+			HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
+		}
+		else if(Tiempo == 0)
 		{
 			HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
 		}
@@ -163,35 +168,12 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  typedef enum{
-	  Inicio,
-	  Dimmer
-  }prueba;
 
-  prueba siguiente_estado;
-  siguiente_estado = Inicio;
 
-  uint16_t Tiempo = 231;
+
   while (1)
   {
-	  switch(siguiente_estado)
-	  {
-		  case Inicio:
-		  {
-			  app_Despliegue(Tiempo, Catodo);
-			  siguiente_estado = Dimmer;
-		  }
-		  break;
-		  case Dimmer:
-		  {
-			  app_CruceCero(Tiempo);
-			  siguiente_estado = Inicio;
-		  }break;
-		  default:
-		  {
-
-		  }
-	  }
+	  app_Dimmer();
 
   }
     /* USER CODE END WHILE */
