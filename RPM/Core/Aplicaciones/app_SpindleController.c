@@ -57,7 +57,7 @@ void app_SpindleController(void)
 				else
 				{
 					/* Lectura de Frecuencia del encoder optico */
-					Frecuencia = app_LecturaPulsos();
+
 
 					/* Camculo de RPM */
 					RPM_ref = app_CalculoRPM(Frecuencia);

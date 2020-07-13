@@ -47,6 +47,7 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 extern uint8_t Aumento;
+extern uint16_t Frecuencia;
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

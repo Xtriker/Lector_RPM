@@ -34,8 +34,10 @@
 
 /* Funciones globales */
 
-extern uint32_t app_LecturaFrecuencia(void);
+
 extern void app_Tacometro(void);
-extern uint16_t app_LecturaPulsos(void);
+
 extern uint16_t app_CalculoRPM(uint16_t promedio);
+
+extern uint8_t Flag;
 #endif /* APP_FRECUENCIA_H_ */

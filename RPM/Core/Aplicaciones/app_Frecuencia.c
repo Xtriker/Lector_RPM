@@ -23,27 +23,13 @@ TIM_HandleTypeDef htim2;
 
 /* Variables globales */
 uint8_t n = 0;
-uint16_t Frecuencia[N_muestras],Frec_prom = 0,RPM = 0;
+uint16_t Frec_prom = 0,RPM = 0;
 
 Estados seleccion = Inicio;
 
 uint16_t incremento = 0,frecuencia = 0;
-uint16_t app_ConteoFrecuencia(void)
-{
+uint8_t Flag = 0;
 
-	htim2.Instance->CNT = 0;
-	while(htim2.Instance->CNT < 1000)
-	{
-		/* Espera el estado de flanco de subida */
-		while(!(HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin)));
-		/* Espera el estado de flanco de bajada */
-		while((HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin)));
-		incremento = incremento + 1;
-	}
-	return frecuencia = incremento;
-	incremento = 0;
-
-}
 
 uint16_t app_PromedioFrecuencia(void)
 {
@@ -51,7 +37,7 @@ uint16_t app_PromedioFrecuencia(void)
 	volatile uint8_t contador =0;
 	while(contador < N_muestras)
 	{
-		suma = suma + Frecuencia[contador];
+		suma = suma ;
 		contador = contador + 1;
 	}
 	promedio = suma/N_muestras;
@@ -65,14 +51,6 @@ uint16_t app_CalculoRPM(uint16_t promedio)
 	return RPM;
 }
 
-uint16_t app_LecturaPulsos(void)
-{
-	volatile uint16_t Lectura = 0;
-	HAL_TIM_Base_Start_IT(&htim2);
-	return Lectura = app_ConteoFrecuencia();
-	HAL_TIM_Base_Stop_IT(&htim2);
-
-}
 
 void app_Tacometro(void)
 {
@@ -85,7 +63,6 @@ void app_Tacometro(void)
 			HAL_TIM_Base_Stop_IT(&htim2);
 			while(n < N_muestras)
 			{
-				Frecuencia[n]= 0;
 				n = n + 1;
 			}
 			n = 0;
@@ -105,7 +82,6 @@ void app_Tacometro(void)
 				HAL_TIM_Base_Start_IT(&htim2);
 				while(n < N_muestras)
 				{
-				Frecuencia[n] = app_ConteoFrecuencia()/division;
 				n = n + 1;
 				division = division + 1;
 				}

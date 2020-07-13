@@ -10,6 +10,7 @@
 
 #include "main.h"
 #include "Librerias.h"
+#include "app_Frecuencia.h"
 
 enum{
 	  Ecuacion,
