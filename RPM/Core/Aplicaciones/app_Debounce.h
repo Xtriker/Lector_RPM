@@ -14,6 +14,7 @@
 #include "../stm32l4xx_hal_tim.h"
 #include "../Aplicaciones/app_Timer.h"
 
+
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador
  * colcar el suyo en la lista de abajo
@@ -28,4 +29,4 @@
 	#include "stm32f1xx_hal_gpio.h"
 #endif
 
-extern uint8_t app_Debounce(void);
+extern void app_Debounce(uint8_t estado);

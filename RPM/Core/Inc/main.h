@@ -111,9 +111,6 @@ extern void app_CruceCero(uint16_t Tiempo);
 #define Display_1_GPIO_Port GPIOB
 #define Entrada_Pin GPIO_PIN_6
 #define Entrada_GPIO_Port GPIOB
-#define Boton_encoder_Pin GPIO_PIN_8
-#define Boton_encoder_GPIO_Port GPIOB
-#define Boton_encoder_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

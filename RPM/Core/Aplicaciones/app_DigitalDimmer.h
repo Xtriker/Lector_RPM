@@ -14,7 +14,8 @@
 
 enum{
 	  Ecuacion,
-	  Dimmer
+	  Dimmer,
+	  Lectura_RPM
   }opcion;
 
 

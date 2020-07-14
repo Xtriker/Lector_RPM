@@ -46,6 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 LPTIM_HandleTypeDef hlptim1;
 
+TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart2;
@@ -60,6 +61,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_LPTIM1_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -69,24 +71,8 @@ static void MX_LPTIM1_Init(void);
 /* Variables globales */
 Tipo cambio;
 uint8_t Aumento = 0,Bandera_DetectorCero = 1;
-uint16_t Valor1 = 0,Valor2 = 0;
-uint8_t Diferencia = 0;
-uint16_t Frecuencia = 0;
-uint8_t Bandera_capturado = 0;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 {
-	if(GPIO_pin == Boton_encoder_Pin)
-	{
-		if(Aumento >= 6)
-		{
-			Aumento = 0;
-		}
-		else
-		{
-			HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-			Aumento++;
-		}
-	}
 	if(GPIO_pin == DetectorCero_Pin)
 	{
 		Bandera_DetectorCero = 0;
@@ -104,41 +90,12 @@ void app_CruceCero(uint16_t Tiempo)
 
 				delay_us(Tiempo);
 				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
-				delay_us(1);
+				delay_us(3);
 				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
 				Bandera_DetectorCero = 1;
 	}
 }
 
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
-{
-	if(htim -> Channel == HAL_TIM_ACTIVE_CHANNEL_2)
-	{
-		if(Bandera_capturado == 0)
-		{
-			Valor1= HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
-			Bandera_capturado = 1;
-		}
-		else if(Bandera_capturado)
-		{
-			Valor2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
-			if(Valor2 > Valor1)
-			{
-				Diferencia = Valor2 - Valor1;
-			}
-			else if(Valor2 < Valor1)
-			{
-				Diferencia = ((Periodo_contador-Valor1)+Valor2)+1;
-			}
-			else
-			{
-				Error_Handler();
-			}
-			Frecuencia = HAL_RCC_GetPCLK1Freq()/Diferencia;
-			Bandera_capturado = 0;
-		}
-	}
-}
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
  set to 'Yes') calls __io_putchar() */
@@ -178,11 +135,12 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM2_Init();
   MX_LPTIM1_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_TIM_Base_Start_IT(&htim1);
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
-
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
   //HAL_LPTIM_Init(&hlptim1);
 
   /* USER CODE END 2 */
@@ -233,7 +191,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
   RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 40;
+  RCC_OscInitStruct.PLL.PLLN = 30;
   RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
   RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -249,7 +207,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -303,6 +261,53 @@ static void MX_LPTIM1_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 60000-1;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
   * @brief TIM2 Initialization Function
   * @param None
   * @retval None
@@ -322,11 +327,11 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 65000-1;
+  htim2.Init.Prescaler = 60-1;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 999999999;
+  htim2.Init.Period = 0xffffffff;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -351,6 +356,11 @@ static void MX_TIM2_Init(void)
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 1;
   if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -463,12 +473,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Entrada_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : Boton_encoder_Pin */
-  GPIO_InitStruct.Pin = Boton_encoder_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(Boton_encoder_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);

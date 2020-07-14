@@ -5,54 +5,41 @@
  *      Author: Dario
  */
 #include "app_Debounce.h"
+enum{
+	Presionado,
+	Presionado_largo,
+	No_presionado
+}estados_debounce;
 
-typedef enum{
-	NO_PRESIONADO,
-	PRESIONADO
-}Presionado_boton;
 
-Presionado_boton estado = NO_PRESIONADO;
-
-uint8_t boton = 0,contador = 0;
-void app_LecturaBoton(void)
+void app_Debounce(uint8_t estado)
 {
-		delay_ms(7);
-		boton = HAL_GPIO_ReadPin(Detener_GPIO_Port, Detener_Pin);
-		if(boton == 0)
-		{
-			contador = contador + 1;
-		}
-		if(contador == 20)
-		{
-			contador = 0;
-			estado = PRESIONADO;
-		}
-		else
-		{
-			estado = NO_PRESIONADO;
-		}
-}
-
-uint8_t app_Debounce(void)
-{
-	volatile uint8_t Presionado = 0;
-	app_LecturaBoton();
 	switch(estado)
 	{
-		case NO_PRESIONADO:
+		case Presionado:
 		{
-			/* No realiza nada */
-			Presionado = 0;
+			if(Aumento >= 6)
+			{
+				Aumento = 0;
+			}
+			else
+			{
+				HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+				Aumento++;
+			}
 		}break;
-		case PRESIONADO:
+		case Presionado_largo:
 		{
-			Presionado = 1;
+
+		}break;
+		case No_presionado:
+		{
+
 		}break;
 		default:
 		{
-
+			estados_debounce = No_presionado;
 		}
 	}
-	return Presionado;
 }
 

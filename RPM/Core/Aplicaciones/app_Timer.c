@@ -10,16 +10,16 @@
 #include "app_Timer.h"
 
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim1;
 
-//void delay_ms(uint16_t ms)
-//{
-//	uint16_t conversion = 0;
-//	/* Colocar el valor del contador a 0, seleccionar el timer que se desea usar */
-//	__HAL_TIM_SET_COUNTER(&htim2,0);
-//	conversion = ms * 1000;
-//	while(__HAL_TIM_GET_COUNTER(&htim2) < conversion)
-//	{}
-//}
+void delay_ms(uint16_t ms)
+{
+	/* Colocar el valor del contador a 0, seleccionar el timer que se desea usar */
+	__HAL_TIM_SET_COUNTER(&htim1,0);
+
+	while(__HAL_TIM_GET_COUNTER(&htim1) < ms)
+	{}
+}
 
 void delay_us(uint16_t us)
 {
