@@ -19,25 +19,19 @@ void app_SpindleController(void)
 
 	/* Se colocan los datos minimos de 0 hasta 180 por el angulo de fase */
 	volatile float minOutput = 0, maxOutput = 180;
-	volatile uint8_t boton_evento = app_Debounce();
 	switch(cambio)
 	{
 		case Comienzo:
 			{
 				Periodo = 0; Tiempo = 0; Frecuencia = 0, RPM_ref = 0; Valor = 0;
-				boton_evento = 0;
+
 				/* Se inicializa el controlador PID */
 				PIDInit(66.2765, 4614.7793, 0.21131, 1, minOutput, maxOutput, AUTOMATIC, DIRECT);
 				cambio = Seleccion;
 			}break;
 		case Seleccion:
 			{
-				if(boton_evento == 1)
-				{
-					cambio = Comienzo;
-				}
-				else
-				{
+
 					/* Seleccion de los valores mediante el encoder */
 					app_SeleccionEncoder();
 
@@ -46,49 +40,34 @@ void app_SpindleController(void)
 
 					/* Cuando acaba cambia de estado */
 					cambio = Lectura;
-				}
+
 			}break;
 		case Lectura:
 			{
-				if(boton_evento == 1)
-				{
-					cambio = Seleccion;
-				}
-				else
-				{
+
 					/* Lectura de Frecuencia del encoder optico */
-					Frecuencia = app_LecturaPulsos();
+
 
 					/* Camculo de RPM */
 					RPM_ref = app_CalculoRPM(Frecuencia);
 
 					/* Cuando acaba cambia de estado */
 					cambio = PID;
-				}
+
 			}break;
 		case PID:
 			{
-				if(boton_evento == 1)
-				{
-					cambio = Seleccion;
-				}
-				else
-				{
+
 					 PIDSetpointSet(Total);
 					 PIDInputSet(RPM_ref);
 					 PIDCompute();
 					 Valor = PIDOutputGet();
 					 cambio = Salida;
-				}
+
 			}break;
 		case Salida:
 			{
-				if(boton_evento == 1)
-				{
-					cambio = Seleccion;
-				}
-				else
-				{
+
 					/* Realiza el calculo del Periodo del detector por cero */
 					Periodo = (0.0166/2)*1000;
 
@@ -99,7 +78,7 @@ void app_SpindleController(void)
 					app_CruceCero(Tiempo);
 
 					cambio = Lectura;
-				}
+
 			}break;
 		default:
 		{

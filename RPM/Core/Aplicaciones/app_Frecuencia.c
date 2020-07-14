@@ -23,27 +23,13 @@ TIM_HandleTypeDef htim2;
 
 /* Variables globales */
 uint8_t n = 0;
-uint16_t Frecuencia[N_muestras],Frec_prom = 0,RPM = 0;
+uint16_t Frec_prom = 0,RPM = 0;
 
 Estados seleccion = Inicio;
 
 uint16_t incremento = 0,frecuencia = 0;
-uint16_t app_ConteoFrecuencia(void)
-{
-
-	htim2.Instance->CNT = 0;
-	while(htim2.Instance->CNT < 1000)
-	{
-		/* Espera el estado de flanco de subida */
-		while(!(HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin)));
-		/* Espera el estado de flanco de bajada */
-		while((HAL_GPIO_ReadPin(Entrada_GPIO_Port, Entrada_Pin)));
-		incremento = incremento + 1;
-	}
-	return frecuencia = incremento;
-	incremento = 0;
-
-}
+uint8_t Flag = 0, Captura = 0,Estado_debounce = 0;
+uint32_t Primer_valor = 0, Segundo_valor = 0, Tiempo = 0,Debounce_us = 0;
 
 uint16_t app_PromedioFrecuencia(void)
 {
@@ -51,11 +37,62 @@ uint16_t app_PromedioFrecuencia(void)
 	volatile uint8_t contador =0;
 	while(contador < N_muestras)
 	{
-		suma = suma + Frecuencia[contador];
+		suma = suma ;
 		contador = contador + 1;
 	}
 	promedio = suma/N_muestras;
 	return promedio;
+}
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+
+	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)  // if the interrupt source is channel2
+	{
+		if (Captura==0) // if the first value is not captured
+		{
+			Primer_valor = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2); // read the first value
+			Captura = 1;  // set the first captured as true
+			// Now change the polarity to falling edge
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_2, TIM_INPUTCHANNELPOLARITY_FALLING);
+		}
+
+		else if (Captura==1)   // if the first is already captured
+		{
+			Segundo_valor = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);  // read second value
+			__HAL_TIM_SET_COUNTER(htim, 0);  // reset the counter
+
+			if (Segundo_valor > Primer_valor)
+			{
+				Tiempo = Segundo_valor+Primer_valor;
+			}
+
+			Captura = 0; // set it back to false
+
+			// set polarity to rising edge
+			__HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_2, TIM_INPUTCHANNELPOLARITY_RISING);
+
+
+		}
+	}
+	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+	{
+		Debounce_us = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+		__HAL_TIM_SET_COUNTER(htim, 0);
+		if(Debounce_us == 100000)
+		{
+			app_Debounce(0);
+		}
+		else if(Debounce_us >= 1000000)
+		{
+			app_Debounce(1);
+		}
+		else
+		{
+			app_Debounce(3);
+		}
+	}
+
 }
 
 uint16_t app_CalculoRPM(uint16_t promedio)
@@ -65,19 +102,10 @@ uint16_t app_CalculoRPM(uint16_t promedio)
 	return RPM;
 }
 
-uint16_t app_LecturaPulsos(void)
-{
-	volatile uint16_t Lectura = 0;
-	HAL_TIM_Base_Start_IT(&htim2);
-	return Lectura = app_ConteoFrecuencia();
-	HAL_TIM_Base_Stop_IT(&htim2);
-
-}
 
 void app_Tacometro(void)
 {
 	volatile uint8_t boton_evento,division = 1;
-	boton_evento = app_Debounce();
 	switch(seleccion)
 	{
 		case Inicio:
@@ -85,7 +113,6 @@ void app_Tacometro(void)
 			HAL_TIM_Base_Stop_IT(&htim2);
 			while(n < N_muestras)
 			{
-				Frecuencia[n]= 0;
 				n = n + 1;
 			}
 			n = 0;
@@ -105,7 +132,6 @@ void app_Tacometro(void)
 				HAL_TIM_Base_Start_IT(&htim2);
 				while(n < N_muestras)
 				{
-				Frecuencia[n] = app_ConteoFrecuencia()/division;
 				n = n + 1;
 				division = division + 1;
 				}

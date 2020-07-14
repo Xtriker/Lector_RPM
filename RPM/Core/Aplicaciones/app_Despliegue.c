@@ -367,87 +367,87 @@ void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 	uint32_t Tercero  =  ( Numero - Primero - Segundo ) % 1000 / 100;
 	uint32_t Cuarto =  ( Numero - Primero - Segundo - Tercero ) % 10000 / 1000;
 	uint32_t Quinto = (Numero - Primero - Segundo - Tercero - Cuarto) % 100000 / 10000;
+	if(TipoDisplay == Anodo)
+	{
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+	}
+	else if(TipoDisplay == Catodo)
+	{
+		HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+	}
+//	delay_us(65);
+	app_SeleccionDisplay(0, TipoDisplay);
+	app_NumeroA7Segmentos(Quinto,TipoDisplay);
+	delay_us(55);
+	app_SeleccionDisplay(1, TipoDisplay);
+	app_NumeroA7Segmentos(Cuarto,TipoDisplay);
+	delay_us(55);
+	app_SeleccionDisplay(2, TipoDisplay);
+	app_NumeroA7Segmentos(Tercero,TipoDisplay);
+	delay_us(55);
+	app_SeleccionDisplay(3, TipoDisplay);
+	app_NumeroA7Segmentos(Segundo,TipoDisplay);
+	delay_us(55);
+	app_SeleccionDisplay(4, TipoDisplay);
+	app_NumeroA7Segmentos(Primero,TipoDisplay);
+	delay_us(55);
+	if(Bandera[0] == 1)
+	{
+		app_SeleccionDisplay(0, TipoDisplay);
+		app_NumeroA7Segmentos(Quinto,TipoDisplay);
 		if(TipoDisplay == Anodo)
-		{
-			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
-		}
-		else if(TipoDisplay == Catodo)
 		{
 			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
 		}
-		app_SeleccionDisplay(0, TipoDisplay);
-		app_NumeroA7Segmentos(Quinto,TipoDisplay);
+		else if(TipoDisplay == Catodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}
 
-		HAL_Delay(1);
+		delay_us(55);
+	}
+	if(Bandera[1] == 1)
+	{
 		app_SeleccionDisplay(1, TipoDisplay);
+		if(TipoDisplay == Anodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		}
+		else if(TipoDisplay == Catodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}
 		app_NumeroA7Segmentos(Cuarto,TipoDisplay);
-		HAL_Delay(1);
+		delay_us(55);
+	}
+	if(Bandera[2] == 1)
+	{
 		app_SeleccionDisplay(2, TipoDisplay);
+		if(TipoDisplay == Anodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		}
+		else if(TipoDisplay == Catodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}
 		app_NumeroA7Segmentos(Tercero,TipoDisplay);
-		HAL_Delay(1);
+		delay_us(55);
+	}
+	if(Bandera[3] == 1)
+	{
 		app_SeleccionDisplay(3, TipoDisplay);
+		if(TipoDisplay == Anodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
+		}
+		else if(TipoDisplay == Catodo)
+		{
+			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
+		}
 		app_NumeroA7Segmentos(Segundo,TipoDisplay);
-		HAL_Delay(1);
-		app_SeleccionDisplay(4, TipoDisplay);
-		app_NumeroA7Segmentos(Primero,TipoDisplay);
-		HAL_Delay(1);
-		if(Bandera[0] == 1)
-		{
-			app_SeleccionDisplay(0, TipoDisplay);
-			app_NumeroA7Segmentos(Quinto,TipoDisplay);
-			if(TipoDisplay == Anodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
-			}
-			else if(TipoDisplay == Catodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
-			}
-
-			HAL_Delay(3);
-		}
-		if(Bandera[1] == 1)
-		{
-			app_SeleccionDisplay(1, TipoDisplay);
-			if(TipoDisplay == Anodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
-			}
-			else if(TipoDisplay == Catodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
-			}
-			app_NumeroA7Segmentos(Cuarto,TipoDisplay);
-			HAL_Delay(3);
-		}
-		if(Bandera[2] == 1)
-		{
-			app_SeleccionDisplay(2, TipoDisplay);
-			if(TipoDisplay == Anodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
-			}
-			else if(TipoDisplay == Catodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
-			}
-			app_NumeroA7Segmentos(Tercero,TipoDisplay);
-			HAL_Delay(3);
-		}
-		if(Bandera[3] == 1)
-		{
-			app_SeleccionDisplay(3, TipoDisplay);
-			if(TipoDisplay == Anodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 1);
-			}
-			else if(TipoDisplay == Catodo)
-			{
-				HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
-			}
-			app_NumeroA7Segmentos(Segundo,TipoDisplay);
-			HAL_Delay(3);
-		}
+		delay_us(55);
+	}
 
 
 

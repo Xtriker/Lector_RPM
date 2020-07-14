@@ -13,13 +13,15 @@
 #include <stdio.h>
 #include <math.h>
 #include "main.h"
-
+#include "app_Debounce.h"
 #include "app_SpindleController.h"
 
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador
  * colcar el suyo en la lista de abajo
  */
+
+
 #if defined(STM32L4)
 	#include "stm32l412xx.h"
 	#include "stm32l4xx_hal.h"
@@ -34,8 +36,11 @@
 
 /* Funciones globales */
 
-extern uint32_t app_LecturaFrecuencia(void);
+
 extern void app_Tacometro(void);
-extern uint16_t app_LecturaPulsos(void);
+
 extern uint16_t app_CalculoRPM(uint16_t promedio);
+
+extern uint8_t Flag;
+extern uint32_t Tiempo;
 #endif /* APP_FRECUENCIA_H_ */
