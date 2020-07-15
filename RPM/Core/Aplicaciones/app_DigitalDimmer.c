@@ -13,7 +13,7 @@ TIM_HandleTypeDef htim2;
 float Tiempo_activacion = 0, Angulo = 0;
 float RPM_cal = 0;
 
-void app_Dimmer(void)
+void app_Dimmer(uint16_t Frecuencia)
 {
 	 /* Variables locales en donde se guardara el tiempo */
 	PIDInit(100, 400, 10, 1, 170, 20, DIRECT, AUTOMATIC);
@@ -24,7 +24,7 @@ void app_Dimmer(void)
 			  {
 
 
-				  RPM_cal = Freq*60;
+				  RPM_cal = Frecuencia*60;
 
 				  Tiempo_activacion = (4.62962962e-5*Angulo)*1000000;
 
@@ -39,16 +39,16 @@ void app_Dimmer(void)
 
 				  /* Envia la variable Tiempo a la funcion cruce por cero */
 				  app_CruceCero(Tiempo_activacion,RPM_cal);
-				  printf("\r%ld, %f\r\n",Freq, RPM_cal);
+
 				  /* Vuelve al estado inicial de la maquina de estados */
 
 				  opcion = Lectura_RPM;
 			  }break;
 			  case Lectura_RPM:
 			 {
-				 PIDInputSet(25000);
+				 PIDInputSet(3000);
 				 PIDSetpointSet(RPM_cal);
-				 PIDOutputLimitsSet(0, 170);
+				 PIDOutputLimitsSet(0, 180);
 				 PIDCompute();
 				 Angulo = PIDOutputGet();
 

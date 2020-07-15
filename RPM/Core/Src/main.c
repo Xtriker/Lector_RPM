@@ -26,7 +26,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "../Aplicaciones/Librerias.h"
-//#include "../Aplicaciones/app_DigitalDimmer.h"
+#include "../Aplicaciones/app_DigitalDimmer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,39 +69,38 @@ static void MX_TIM15_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* Variables globales */
-//Tipo cambio;
-//uint8_t Aumento = 0,Bandera_DetectorCero = 1;
-//uint32_t Primer_valor = 0, Segundo_valor = 0, Freq = 0,Debounce_us = 0;
 
-//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
-//{
-//	if(GPIO_pin == DetectorCero_Pin)
-//	{
-//		Bandera_DetectorCero = 0;
-//	}
-//	else
-//	{
-//		/* No realiza ninguna funcion */
-//	}
-//}
+uint8_t Bandera_DetectorCero = 1;
 
-//void app_CruceCero(uint16_t Tiempo, float RPM_cal)
-//{
-//	if(RPM_cal < 400)
-//	{
-//		HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
-//	}
-//	if((Bandera_DetectorCero == 0) && (RPM_cal > 400))
-//	{
-//
-//				delay_us(Tiempo);
-//				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
-//				delay_us(3);
-//				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
-//				Bandera_DetectorCero = 1;
-//	}
-//
-//}
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
+{
+	if(GPIO_pin == DetectorCero_Pin)
+	{
+		Bandera_DetectorCero = 0;
+	}
+	else
+	{
+		/* No realiza ninguna funcion */
+	}
+}
+
+void app_CruceCero(uint16_t Tiempo, float RPM_cal)
+{
+	if(RPM_cal < 400)
+	{
+		HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
+	}
+	if((Bandera_DetectorCero == 0) && (RPM_cal > 400))
+	{
+
+				delay_us(Tiempo);
+				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
+				delay_us(3);
+				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
+				Bandera_DetectorCero = 1;
+	}
+
+}
 
 uint32_t IC_Value1 = 0;
 uint32_t IC_Value2 = 0;
@@ -204,7 +203,7 @@ int main(void)
   uint8_t a = 0;
   while (1)
   {
-	  delay_ms(80);
+//	  delay_ms(80);
 	  avg = 0;
 	 for (a=0;a<11;a++)
 	 {
@@ -215,6 +214,7 @@ int main(void)
 			 }
 	 }
 	  app_Despliegue(promedio, Catodo);
+	  app_Dimmer(promedio);
   }
     /* USER CODE END WHILE */
 
