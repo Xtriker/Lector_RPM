@@ -10,7 +10,7 @@
 
 #include "main.h"
 #include "Librerias.h"
-#include "app_Frecuencia.h"
+#include "pid_controller.h"
 
 enum{
 	  Ecuacion,

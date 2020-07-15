@@ -378,19 +378,19 @@ void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 //	delay_us(65);
 	app_SeleccionDisplay(0, TipoDisplay);
 	app_NumeroA7Segmentos(Quinto,TipoDisplay);
-	delay_us(55);
+	delay_us(800);
 	app_SeleccionDisplay(1, TipoDisplay);
 	app_NumeroA7Segmentos(Cuarto,TipoDisplay);
-	delay_us(55);
+	delay_us(800);
 	app_SeleccionDisplay(2, TipoDisplay);
 	app_NumeroA7Segmentos(Tercero,TipoDisplay);
-	delay_us(55);
+	delay_us(800);
 	app_SeleccionDisplay(3, TipoDisplay);
 	app_NumeroA7Segmentos(Segundo,TipoDisplay);
-	delay_us(55);
+	delay_us(800);
 	app_SeleccionDisplay(4, TipoDisplay);
 	app_NumeroA7Segmentos(Primero,TipoDisplay);
-	delay_us(55);
+	delay_us(800);
 	if(Bandera[0] == 1)
 	{
 		app_SeleccionDisplay(0, TipoDisplay);
@@ -404,7 +404,7 @@ void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
 		}
 
-		delay_us(55);
+		delay_us(800);
 	}
 	if(Bandera[1] == 1)
 	{
@@ -418,7 +418,7 @@ void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
 		}
 		app_NumeroA7Segmentos(Cuarto,TipoDisplay);
-		delay_us(55);
+		delay_us(800);
 	}
 	if(Bandera[2] == 1)
 	{
@@ -432,7 +432,7 @@ void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
 		}
 		app_NumeroA7Segmentos(Tercero,TipoDisplay);
-		delay_us(55);
+		delay_us(800);
 	}
 	if(Bandera[3] == 1)
 	{
@@ -446,7 +446,7 @@ void app_Despliegue(uint32_t Numero,uint8_t TipoDisplay)
 			HAL_GPIO_WritePin(Segmento_H_GPIO_Port, Segmento_H_Pin, 0);
 		}
 		app_NumeroA7Segmentos(Segundo,TipoDisplay);
-		delay_us(55);
+		delay_us(800);
 	}
 
 
