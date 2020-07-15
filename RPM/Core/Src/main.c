@@ -40,7 +40,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define Periodo_contador 999999999
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -71,6 +71,8 @@ static void MX_TIM1_Init(void);
 /* Variables globales */
 Tipo cambio;
 uint8_t Aumento = 0,Bandera_DetectorCero = 1;
+uint32_t Primer_valor = 0, Segundo_valor = 0, Freq = 0,Debounce_us = 0;
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 {
 	if(GPIO_pin == DetectorCero_Pin)
@@ -83,9 +85,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 	}
 }
 
-void app_CruceCero(uint16_t Tiempo)
+void app_CruceCero(uint16_t Tiempo, float RPM_cal)
 {
-	if(Bandera_DetectorCero == 0)
+	if(RPM_cal < 400)
+	{
+		HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 1);
+	}
+	if((Bandera_DetectorCero == 0) && (RPM_cal > 400))
 	{
 
 				delay_us(Tiempo);
@@ -94,7 +100,52 @@ void app_CruceCero(uint16_t Tiempo)
 				HAL_GPIO_WritePin(Tiempo_GPIO_Port, Tiempo_Pin, 0);
 				Bandera_DetectorCero = 1;
 	}
+
 }
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+
+	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)  // if the interrupt source is channel2
+	{
+
+			Primer_valor = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2); // read the first value
+			if(Primer_valor!= 0)
+			{
+				if(Primer_valor > 8324)
+				{
+					Freq = 154.166705458681*exp(-0.0000446541010233028*(Primer_valor));
+				}
+				else
+				{
+					Freq = (-248.894284380258*log(Primer_valor))+2347.01922399093;
+				}
+			}
+			else
+			{
+				Freq = 0;
+			}
+	}
+//	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+//	{
+//		Debounce_us = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_4);
+//		__HAL_TIM_SET_COUNTER(htim, 0);
+//		if(Debounce_us == 100000)
+//		{
+//			app_Debounce(0);
+//		}
+//		else if(Debounce_us >= 1000000)
+//		{
+//			app_Debounce(1);
+//		}
+//		else
+//		{
+//			app_Debounce(3);
+//		}
+//	}
+
+}
+
 
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -141,7 +192,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_4);
-  //HAL_LPTIM_Init(&hlptim1);
+  HAL_LPTIM_Init(&hlptim1);
 
   /* USER CODE END 2 */
 
@@ -152,7 +203,7 @@ int main(void)
 
   while (1)
   {
-	  app_Dimmer();
+		  app_Dimmer();
 
   }
     /* USER CODE END WHILE */
@@ -320,6 +371,7 @@ static void MX_TIM2_Init(void)
   /* USER CODE END TIM2_Init 0 */
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_SlaveConfigTypeDef sSlaveConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_IC_InitTypeDef sConfigIC = {0};
 
@@ -331,7 +383,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 0xffffffff;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -345,21 +397,28 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
+  sSlaveConfig.InputTrigger = TIM_TS_TI2FP2;
+  sSlaveConfig.TriggerPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
+  sSlaveConfig.TriggerFilter = 0;
+  if (HAL_TIM_SlaveConfigSynchro(&htim2, &sSlaveConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 1;
+  sConfigIC.ICFilter = 0;
   if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigIC.ICFilter = 0;
   if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();

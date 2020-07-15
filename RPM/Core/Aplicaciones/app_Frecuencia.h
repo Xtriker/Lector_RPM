@@ -42,5 +42,5 @@ extern void app_Tacometro(void);
 extern uint16_t app_CalculoRPM(uint16_t promedio);
 
 extern uint8_t Flag;
-extern uint32_t Tiempo;
+
 #endif /* APP_FRECUENCIA_H_ */

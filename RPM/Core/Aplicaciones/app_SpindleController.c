@@ -15,7 +15,7 @@ void app_SpindleController(void)
 	cambio = Comienzo;
 	/* Declaracion de las variables */
 	volatile float Periodo;
-	volatile uint16_t Tiempo, Frecuencia,Valor,RPM_ref;
+	volatile uint16_t  Frecuencia,Valor,RPM_ref;
 
 	/* Se colocan los datos minimos de 0 hasta 180 por el angulo de fase */
 	volatile float minOutput = 0, maxOutput = 180;
@@ -23,7 +23,7 @@ void app_SpindleController(void)
 	{
 		case Comienzo:
 			{
-				Periodo = 0; Tiempo = 0; Frecuencia = 0, RPM_ref = 0; Valor = 0;
+				Periodo = 0; Frecuencia = 0; RPM_ref = 0; Valor = 0;
 
 				/* Se inicializa el controlador PID */
 				PIDInit(66.2765, 4614.7793, 0.21131, 1, minOutput, maxOutput, AUTOMATIC, DIRECT);
@@ -72,10 +72,10 @@ void app_SpindleController(void)
 					Periodo = (0.0166/2)*1000;
 
 					/* Realiza el calculo del tiempo necesario para el angulo de fase */
-					Tiempo = ((Valor*Periodo)/180)*100;
+
 
 					/* Envia el tiempo para la activacion de SCR */
-					app_CruceCero(Tiempo);
+
 
 					cambio = Lectura;
 
