@@ -48,13 +48,14 @@ extern "C" {
 /* USER CODE BEGIN EM */
 extern uint8_t Aumento;
 extern uint16_t Frecuencia;
+extern uint32_t Freq;
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-extern void app_CruceCero(uint16_t Tiempo);
+extern void app_CruceCero(uint16_t Tiempo,float RPM_cal);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

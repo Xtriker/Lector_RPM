@@ -10,7 +10,7 @@
 
 #include "main.h"
 #include "Librerias.h"
-#include "app_Frecuencia.h"
+#include "pid_controller.h"
 
 enum{
 	  Ecuacion,
@@ -20,5 +20,5 @@ enum{
 
 
 
-extern void app_Dimmer(void);
+extern void app_Dimmer(uint16_t Frecuencia);
 #endif /* APP_DIGITALDIMMER_H_ */

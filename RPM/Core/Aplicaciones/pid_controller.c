@@ -52,8 +52,8 @@ void PIDInit(float kp, float ki, float kd,
              float sampleTimeSeconds, float minOutput, float maxOutput, 
              PIDMode mode, PIDDirection controllerDirection)
 {
-    pid.controllerDirection = controllerDirection;
-    pid.mode = mode;
+    pid.controllerDirection = DIRECT;
+    pid.mode = AUTOMATIC;
 
     if(sampleTimeSeconds > 0.0f)
     {

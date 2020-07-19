@@ -10,21 +10,21 @@
 
 TIM_HandleTypeDef htim2;
 
-void app_Dimmer(void)
+float Tiempo_activacion = 0, Angulo = 0;
+float RPM_cal = 0;
+
+void app_Dimmer(uint16_t Frecuencia)
 {
 	 /* Variables locales en donde se guardara el tiempo */
-	 static float Tiempo_activacion = 0, Angulo = 140;
-	 uint16_t Frecuencia = 0, RPM = 0;
-
+	PIDInit(100, 400, 10, 1, 170, 20, DIRECT, AUTOMATIC);
 	 switch(opcion)
 		  {
 
 			  case Ecuacion:
 			  {
-				  /* Linea de tendencia determinadad mediante los dato capturados */
-				  /* Convierte angulo de fase en tiempo, este tiempo es necesario para
-				   * la correcta activacion del SCR */
 
+
+				  RPM_cal = Frecuencia*60;
 
 				  Tiempo_activacion = (4.62962962e-5*Angulo)*1000000;
 
@@ -38,7 +38,7 @@ void app_Dimmer(void)
 			  {
 
 				  /* Envia la variable Tiempo a la funcion cruce por cero */
-				  app_CruceCero(Tiempo_activacion);
+				  app_CruceCero(Tiempo_activacion,RPM_cal);
 
 				  /* Vuelve al estado inicial de la maquina de estados */
 
@@ -46,12 +46,14 @@ void app_Dimmer(void)
 			  }break;
 			  case Lectura_RPM:
 			 {
-				 Frecuencia = (1/Tiempo)*1000000;
-
-				 RPM = app_CalculoRPM(Frecuencia);
+				 PIDInputSet(3000);
+				 PIDSetpointSet(RPM_cal);
+				 PIDOutputLimitsSet(0, 180);
+				 PIDCompute();
+				 Angulo = PIDOutputGet();
 
 				  /* Imprime la variable flotante Tiempo en el display de 7 segmentos */
-				 app_Despliegue(RPM, Catodo);
+				 //app_FloatADisplay(Tiempo_activacion, Catodo);
 
 				 opcion = Ecuacion;
 			 }break;
