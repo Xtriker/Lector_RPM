@@ -5,41 +5,37 @@
  *      Author: Dario
  */
 #include "app_Debounce.h"
+
+volatile uint16_t TiempoPresionado = 0;
+
 enum{
-	Presionado,
-	Presionado_largo,
-	No_presionado
-}estados_debounce;
+	OpcionUno = 100,
+	OpcionDos = 200
+};
 
-
-void app_Debounce(uint8_t estado)
+estado app_Debounce(void)
 {
-	switch(estado)
+	estado PresionadoBoton;
+	while(HAL_GPIO_ReadPin(Boton_encoder_GPIO_Port, Boton_encoder_Pin) == GPIO_PIN_RESET)
 	{
-		case Presionado:
-		{
-			if(Aumento >= 6)
-			{
-				Aumento = 0;
-			}
-			else
-			{
-				HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-				Aumento++;
-			}
-		}break;
-		case Presionado_largo:
-		{
-
-		}break;
-		case No_presionado:
-		{
-
-		}break;
-		default:
-		{
-			estados_debounce = No_presionado;
-		}
+		delay_ms(100);
+		TiempoPresionado = TiempoPresionado + 100;
 	}
+
+	if(TiempoPresionado >= OpcionUno)
+	{
+		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+		PresionadoBoton = Normal;
+	}
+	else if(TiempoPresionado >= OpcionDos)
+	{
+		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+		PresionadoBoton = Mantenido;
+	}
+	else
+	{
+		PresionadoBoton = Nopresionado;
+	}
+	return PresionadoBoton;
 }
 
