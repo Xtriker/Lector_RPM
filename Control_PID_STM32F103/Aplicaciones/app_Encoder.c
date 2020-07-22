@@ -24,7 +24,7 @@ void app_SeleccionEncoder(void)
 			  {
 				  Primero = 0;
 				  ValorEncoder = 0;
-				  HAL_LPTIM_Encoder_Stop(&hlptim1);
+				  HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
 				  Total = Primero + Segundo;
 			  }
 			  else
@@ -39,7 +39,7 @@ void app_SeleccionEncoder(void)
 			  {
 				  Segundo = 0;
 				  ValorEncoder = 0;
-				  HAL_LPTIM_Encoder_Stop(&hlptim1);
+				  HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
 				  Total = Primero + Segundo;
 			  }
 			  {
@@ -53,7 +53,7 @@ void app_SeleccionEncoder(void)
 			  {
 				  Tercero = 0;
 				  ValorEncoder = 0;
-				  HAL_LPTIM_Encoder_Stop(&hlptim1);
+				  HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
 				  Total = Primero + Segundo;
 			  }
 			  else
@@ -68,7 +68,7 @@ void app_SeleccionEncoder(void)
 			  {
 				  Cuarto = 0;
 				  ValorEncoder = 0;
-				  HAL_LPTIM_Encoder_Stop(&hlptim1);
+				  HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
 				  Total = Primero + Segundo;
 			  }
 			  else
@@ -83,7 +83,6 @@ void app_SeleccionEncoder(void)
 			  {
 				  Quinto = 0;
 				  ValorEncoder = 0;
-				  HAL_LPTIM_Encoder_Stop(&hlptim1);
 				  Total = Primero + Segundo;
 			  }
 			  else
@@ -144,15 +143,15 @@ void app_SeleccionarAngulo(void)
 
 uint8_t app_LecturaEncoder(void)
 {
-	/* Inicia el Timer de bajo consumo */
-	HAL_LPTIM_Encoder_Start(&hlptim1, 36);
+	/* Inicia el Timer */
+	HAL_TIM_Encoder_Start(&htim2, 36);
 
 	/* Definicion de las variables */
-	ValorEncoder = HAL_LPTIM_ReadCounter(&hlptim1)/4;
+	ValorEncoder = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_ALL)/4;
 
 	/*Devuelve valor del encoder*/
 	return ValorEncoder;
 
 	/* Desabilita el Encoder */
-	HAL_LPTIM_Encoder_Stop(&hlptim1);
+	HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
 }

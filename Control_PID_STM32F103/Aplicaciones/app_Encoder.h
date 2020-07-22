@@ -10,9 +10,15 @@
 
 
 #include "main.h"
+#include "app_Debounce.h"
 
+TIM_HandleTypeDef htim2;
 
-LPTIM_HandleTypeDef hlptim1;
+/*  ----------------
+ * | TIM2_CH1 | PA0 |
+ * | TIM2_CH2 | PA1 |
+ *  ________________
+ */
 
 extern uint8_t app_LecturaEncoder(void);
 extern void app_SeleccionEncoder(void);

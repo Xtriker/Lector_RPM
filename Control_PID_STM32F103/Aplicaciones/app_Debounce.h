@@ -33,4 +33,5 @@ typedef enum{
 #endif
 
 extern void app_Debounce(void);
+extern volatile uint8_t Aumento;
 
