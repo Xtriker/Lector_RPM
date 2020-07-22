@@ -13,29 +13,32 @@ enum{
 	OpcionDos = 200
 };
 
-estado app_Debounce(void)
+void app_Debounce(void)
 {
-	estado PresionadoBoton;
-	while(HAL_GPIO_ReadPin(Boton_encoder_GPIO_Port, Boton_encoder_Pin) == GPIO_PIN_RESET)
+	uint8_t Presionado = 0;
+	while(HAL_GPIO_ReadPin(Boton_GPIO_Port, Boton_Pin) == GPIO_PIN_RESET)
 	{
-		delay_ms(100);
-		TiempoPresionado = TiempoPresionado + 100;
+		delay_ms(10);
+		TiempoPresionado = TiempoPresionado + 10;
+		Presionado = 1;
 	}
+	if(TiempoPresionado >= OpcionDos)
+	{
+		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+		TiempoPresionado = 0;
 
-	if(TiempoPresionado >= OpcionUno)
-	{
-		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-		PresionadoBoton = Normal;
-	}
-	else if(TiempoPresionado >= OpcionDos)
-	{
-		HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-		PresionadoBoton = Mantenido;
 	}
 	else
 	{
-		PresionadoBoton = Nopresionado;
+		if((TiempoPresionado <= OpcionUno) && (Presionado == 1))
+			{
+				HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+				TiempoPresionado = 0;
+				Presionado = 0;
+
+			}
+
 	}
-	return PresionadoBoton;
+
 }
 

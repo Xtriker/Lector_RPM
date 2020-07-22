@@ -8,11 +8,10 @@
 
 /* Librerias usadas para el programa */
 
+
 #include <stdio.h>
 #include "main.h"
-#include "../stm32l4xx_hal_gpio.h"
-#include "../stm32l4xx_hal_tim.h"
-#include "../Aplicaciones/app_Timer.h"
+#include "app_Delay.h"
 
 typedef enum{
 	 Nopresionado = 0U,
@@ -28,9 +27,10 @@ typedef enum{
 	#include "stm32l4xx_hal.h"
 	#include "stm32l4xx_hal_gpio.h"
 #elif defined(STM32F1)
-	#include "stm32fxx.h"
+	#include "stm32f1xx.h"
 	#include "stm32f1xx_hal.h"
 	#include "stm32f1xx_hal_gpio.h"
 #endif
 
-extern estado app_Debounce(void);
+extern void app_Debounce(void);
+
