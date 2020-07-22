@@ -14,7 +14,11 @@
 #include "../stm32l4xx_hal_tim.h"
 #include "../Aplicaciones/app_Timer.h"
 
-
+typedef enum{
+	 Nopresionado = 0U,
+	 Normal,
+	 Mantenido
+}estado;
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador
  * colcar el suyo en la lista de abajo
@@ -29,4 +33,4 @@
 	#include "stm32f1xx_hal_gpio.h"
 #endif
 
-extern void app_Debounce(uint8_t estado);
+extern estado app_Debounce(void);
