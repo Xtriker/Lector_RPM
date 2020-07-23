@@ -12,6 +12,7 @@
 #include "main.h"
 #include "app_Delay.h"
 
+
 #if defined(STM32L4)
 	#include "stm32l412xx.h"
 	#include "stm32l4xx_hal.h"
@@ -26,15 +27,30 @@
 
 SPI_HandleTypeDef hspi1;
 
-#define MAX7219_MODE_DECODE       0x0900
-#define MAX7219_MODE_INTENSITY    0x0A00
-#define MAX7219_MODE_SCAN_LIMIT   0x0B00
-#define MAX7219_MODE_POWER        0x0C00
-#define MAX7219_MODE_TEST         0x0F00
-#define MAX7219_MODE_NOOP         0x0000
+#define DECODE_MODE       	 0x09
+#define INTENSITY    		 0x0A
+#define SCAN_LIMIT   	 	 0x0B
+#define SHUTDOWN        	 0x0C
+#define DISPLAY_TEST    	 0x0F
+#define DISABLE_DECODE       0x00
+#define DECODE_ALL			 0xFF
+#define BRIGHTNESS			 0x0F
+#define SCAN_LOW_NIBBLE		 0x03
+#define SCAN_ALL_DIGITS		 0x07
+#define SHUTDOWN_MODE		 0x00
+#define NORMAL_OPERATION     0x01
+#define	DISABLE_TEST_MODE	 0x00
+#define ENABLE_TEST_MODE	 0x01
 
 extern void app_InitMAX7219(void);
 extern void app_TestMX7219(void);
+
+extern void app_NumeroAMAX7219(uint32_t Numero, uint8_t Numero_displays);
+extern void app_ApagarDisplay(void);
+extern void app_EncenderDisplay(void);
+extern void app_BrilloDisplay(uint8_t Brillo);
+
 extern void SPI_CS_ENABLE(void);
 extern void SPI_CS_DISABLE(void);
+
 #endif /* APP_MAX7219_H_ */

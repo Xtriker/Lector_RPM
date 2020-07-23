@@ -19,14 +19,14 @@
 void SPI_CS_ENABLE(void)
 {
 	do{
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(CSS_GPIO_Port, CSS_Pin, GPIO_PIN_RESET);
 	}while(0);
 }
 
 void SPI_CS_DISABLE(void)
 {
 	do{
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(CSS_GPIO_Port, CSS_Pin, GPIO_PIN_SET);
 	}while(0);
 }
 void SPI_Transmit(SPI_HandleTypeDef *hspi, uint16_t data) {
@@ -37,35 +37,82 @@ void SPI_Transmit(SPI_HandleTypeDef *hspi, uint16_t data) {
 void app_InitMAX7219(void)
 {
     SPI_CS_ENABLE();
-    SPI_Transmit(&hspi1, MAX7219_MODE_SCAN_LIMIT | 7);
+    SPI_Transmit(&hspi1, DECODE_MODE);
+    SPI_Transmit(&hspi1, DECODE_ALL);
     SPI_CS_DISABLE();
 
     SPI_CS_ENABLE();
-    SPI_Transmit(&hspi1, MAX7219_MODE_INTENSITY | 0xF);
+    SPI_Transmit(&hspi1, INTENSITY);
+    SPI_Transmit(&hspi1, BRIGHTNESS); /* Selecciona el nivel de brillo del display de 7 segmentos */
     SPI_CS_DISABLE();
 
     SPI_CS_ENABLE();
-    SPI_Transmit(&hspi1, MAX7219_MODE_POWER | 0x1);
+    SPI_Transmit(&hspi1, SCAN_LIMIT);
+    SPI_Transmit(&hspi1, SCAN_ALL_DIGITS);
     SPI_CS_DISABLE();
 
     SPI_CS_ENABLE();
-    SPI_Transmit(&hspi1, MAX7219_MODE_DECODE | 0);
+    SPI_Transmit(&hspi1, SHUTDOWN);
+    SPI_Transmit(&hspi1, NORMAL_OPERATION);
     SPI_CS_DISABLE();
+
+    SPI_CS_ENABLE();
+	SPI_Transmit(&hspi1, DISPLAY_TEST);
+	SPI_Transmit(&hspi1, ENABLE_TEST_MODE);
+	SPI_CS_DISABLE();
+
+	SPI_CS_ENABLE();
+	SPI_Transmit(&hspi1, DISPLAY_TEST);
+	SPI_Transmit(&hspi1, DISABLE_TEST_MODE);
+	SPI_CS_DISABLE();
 }
 
+void app_NumeroAMAX7219(uint32_t Numero, uint8_t Numero_displays)
+{
+	  volatile uint8_t i;
+	  for(i=1;(Numero>0) || (i-Numero_displays<=0) ;Numero/=10,i++)
+	  {
+		SPI_CS_ENABLE();
+		SPI_Transmit(&hspi1,i);
+	    SPI_Transmit(&hspi1,Numero%10);
+	    SPI_CS_DISABLE();
+	  }
+}
+
+void app_ApagarDisplay(void)
+{
+	SPI_CS_ENABLE();
+	SPI_Transmit(&hspi1, SHUTDOWN);
+	SPI_Transmit(&hspi1, DISABLE_DECODE);
+	SPI_CS_DISABLE();
+}
+
+void app_EncenderDisplay(void)
+{
+	SPI_CS_ENABLE();
+	SPI_Transmit(&hspi1, SHUTDOWN);
+	SPI_Transmit(&hspi1, NORMAL_OPERATION);
+	SPI_CS_DISABLE();
+}
+
+void app_BrilloDisplay(uint8_t Brillo)
+{
+	if((Brillo >= 0) && (Brillo <= 15))
+	  {
+	    SPI_CS_ENABLE();
+	    SPI_Transmit(&hspi1, 0x0A);
+	    SPI_Transmit(&hspi1, Brillo);
+	    SPI_CS_DISABLE();
+	  }
+}
+
+/* Contador de 0 a 99999 en 5 displays de 7 segmentos */
 void app_TestMX7219(void)
 {
-	uint16_t col;
-	int bit;
-
-	        for (col = 0x100; col <= 0x800; col += 0x100)
-	        {
-	            for (bit = 7; bit >= 0; bit--)
-	            {
-	                SPI_CS_ENABLE();
-	                SPI_Transmit(&hspi1, col | (1 << bit & 0xFF));
-	                SPI_CS_DISABLE();
-	                delay_ms(30);
-	            }
-	        }
+	uint16_t i;
+	for(i=0;i<99999;i++)
+	{
+	  app_NumeroAMAX7219(i,5);
+	  delay_ms(10);
+	}
 }
