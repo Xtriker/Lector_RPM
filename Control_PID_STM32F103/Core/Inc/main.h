@@ -37,7 +37,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+extern uint8_t Bandera_DetectorCero;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -68,6 +68,10 @@ void Error_Handler(void);
 #define Boton1_GPIO_Port GPIOB
 #define Boton2_Pin GPIO_PIN_14
 #define Boton2_GPIO_Port GPIOB
+#define DetectorCero_Pin GPIO_PIN_15
+#define DetectorCero_GPIO_Port GPIOB
+#define SSR_Pin GPIO_PIN_8
+#define SSR_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
