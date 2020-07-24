@@ -13,11 +13,7 @@
 #include "main.h"
 #include "app_Delay.h"
 
-typedef enum{
-	 Nopresionado = 0U,
-	 Normal,
-	 Mantenido
-}estado;
+
 /* Seleccion del microcontrolador
  * si no se encuentra el microcontrolador
  * colcar el suyo en la lista de abajo

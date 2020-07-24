@@ -19,11 +19,11 @@ void app_Debounce(void)
 	uint8_t Presionado = 0;
 	while(HAL_GPIO_ReadPin(Boton_GPIO_Port, Boton_Pin) == GPIO_PIN_RESET)
 	{
-		delay_ms(100);
+		delay_us(50000);
 		TiempoPresionado = TiempoPresionado + 100;
 		Presionado = 1;
 	}
-	if(Aumento == 6)
+	if(Aumento >= 4)
 	{
 		Aumento = 0;
 	}
@@ -31,7 +31,7 @@ void app_Debounce(void)
 	{
 		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 		TiempoPresionado = 0;
-		Aumento++;
+		Aumento = 0;
 	}
 	else
 	{
@@ -40,7 +40,7 @@ void app_Debounce(void)
 				HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 				TiempoPresionado = 0;
 				Presionado = 0;
-				Aumento = 0;
+				Aumento++;
 			}
 
 	}

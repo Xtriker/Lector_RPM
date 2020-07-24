@@ -26,6 +26,7 @@
 #include "../../Aplicaciones/app_Debounce.h"
 #include "../../Aplicaciones/app_Delay.h"
 #include "../../Aplicaciones/app_MAX7219.h"
+#include "../../Aplicaciones/app_Encoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,15 +102,18 @@ int main(void)
   /* USER CODE BEGIN 2 */
   __HAL_SPI_ENABLE(&hspi1);
   HAL_TIM_Base_Start_IT(&htim1);
-  HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
-  SPI_CS_DISABLE();
+  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1);
+  app_InitMAX7219();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
 	  app_Debounce();
+	  app_SeleccionarAngulo();
+	  app_NumeroAMAX7219(Total, 4);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -256,15 +260,15 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 200;
+  htim2.Init.Period = 30;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
   sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 4;
-  sConfig.IC2Polarity = TIM_ICPOLARITY_FALLING;
+  sConfig.IC1Filter = 0;
+  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
   sConfig.IC2Filter = 0;
@@ -303,7 +307,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CSS_GPIO_Port, CSS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(CSS_GPIO_Port, CSS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : LED_Pin */
   GPIO_InitStruct.Pin = LED_Pin;
@@ -322,7 +326,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : Boton_Pin */
   GPIO_InitStruct.Pin = Boton_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(Boton_GPIO_Port, &GPIO_InitStruct);
 
 }

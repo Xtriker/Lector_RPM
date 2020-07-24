@@ -46,11 +46,13 @@ extern void app_InitMAX7219(void);
 extern void app_TestMX7219(void);
 
 extern void app_NumeroAMAX7219(uint32_t Numero, uint8_t Numero_displays);
+//extern void FloatAMAX7912(float Numero, uint8_t Numero_display);
 extern void app_ApagarDisplay(void);
 extern void app_EncenderDisplay(void);
 extern void app_BrilloDisplay(uint8_t Brillo);
 
 extern void SPI_CS_ENABLE(void);
 extern void SPI_CS_DISABLE(void);
+extern void SPI_Transmit(SPI_HandleTypeDef *hspi, uint16_t data);
 
 #endif /* APP_MAX7219_H_ */

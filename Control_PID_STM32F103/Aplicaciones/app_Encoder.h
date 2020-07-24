@@ -11,6 +11,7 @@
 
 #include "main.h"
 #include "app_Debounce.h"
+#include "app_MAX7219.h"
 
 TIM_HandleTypeDef htim2;
 

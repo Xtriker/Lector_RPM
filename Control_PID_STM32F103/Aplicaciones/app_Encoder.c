@@ -107,33 +107,24 @@ void app_SeleccionarAngulo(void)
 	  {
 		  case 0:
 		  {
-			  		  Primero = app_LecturaEncoder() * 10000;
-			  		  Total = Primero;
-
+			  Primero = app_LecturaEncoder() * 1000;
+			  Total = Primero;
 		  }break;
 		  case 1:
 		  {
-
-					  Segundo = app_LecturaEncoder() * 1000;
-					  Total = Segundo + Primero;
-
+			  Segundo = app_LecturaEncoder() * 100;
+			  Total = Segundo + Primero;
 		  }break;
-		  case 3:
+		  case 2:
 		  {
-
-				  Tercero = app_LecturaEncoder() * 100;
-				  Total = Primero + Segundo + Tercero;
+			  Tercero = app_LecturaEncoder() * 10;
+			  Total = Primero + Segundo + Tercero;
 		  	}break;
-		  case 4:
+		  case 3:
    		  {
-				  Cuarto = app_LecturaEncoder() * 10;
-				  Total = Primero + Segundo + Tercero + Cuarto;
+			  Cuarto = app_LecturaEncoder();
+			  Total = Primero + Segundo + Tercero + Cuarto;
 		   	}break;
-	  	  	 case 5:
-	 		  {
-	  			  Quinto = app_LecturaEncoder() * 1;
-	  			  Total = Primero + Segundo + Tercero + Cuarto + Quinto;
-	  	  	}break;
 		  default:
 		  {
 
@@ -143,15 +134,15 @@ void app_SeleccionarAngulo(void)
 
 uint8_t app_LecturaEncoder(void)
 {
-	/* Inicia el Timer */
-	HAL_TIM_Encoder_Start(&htim2, 36);
 
 	/* Definicion de las variables */
-	ValorEncoder = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_ALL)/4;
+	ValorEncoder = HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_1)/3;
 
+	if(ValorEncoder == 10)
+	{
+		ValorEncoder = 0;
+		__HAL_TIM_SET_COUNTER(&htim2,0);
+	}
 	/*Devuelve valor del encoder*/
 	return ValorEncoder;
-
-	/* Desabilita el Encoder */
-	HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
 }

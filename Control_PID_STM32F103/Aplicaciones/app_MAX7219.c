@@ -38,12 +38,12 @@ void app_InitMAX7219(void)
 {
     SPI_CS_ENABLE();
     SPI_Transmit(&hspi1, DECODE_MODE);
-    SPI_Transmit(&hspi1, DECODE_ALL);
+    SPI_Transmit(&hspi1, 0xff);
     SPI_CS_DISABLE();
 
     SPI_CS_ENABLE();
     SPI_Transmit(&hspi1, INTENSITY);
-    SPI_Transmit(&hspi1, BRIGHTNESS); /* Selecciona el nivel de brillo del display de 7 segmentos */
+    SPI_Transmit(&hspi1, 0x00); /* Selecciona el nivel de brillo del display de 7 segmentos */
     SPI_CS_DISABLE();
 
     SPI_CS_ENABLE();
@@ -70,7 +70,7 @@ void app_InitMAX7219(void)
 void app_NumeroAMAX7219(uint32_t Numero, uint8_t Numero_displays)
 {
 	  volatile uint8_t i;
-	  for(i=1;(Numero>0) || (i-Numero_displays<=0) ;Numero/=10,i++)
+	  for(i=4;(Numero > 0) || (Numero_displays - i<=0) ; Numero/=10,i--)
 	  {
 		SPI_CS_ENABLE();
 		SPI_Transmit(&hspi1,i);
@@ -113,6 +113,6 @@ void app_TestMX7219(void)
 	for(i=0;i<99999;i++)
 	{
 	  app_NumeroAMAX7219(i,5);
-	  delay_ms(10);
+	  delay_us(100000);
 	}
 }
