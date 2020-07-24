@@ -1,6 +1,5 @@
 "Aplicaciones/app_Debounce.o"
 "Aplicaciones/app_Delay.o"
-"Aplicaciones/app_Encoder.o"
 "Aplicaciones/app_MAX7219.o"
 "Core/Src/main.o"
 "Core/Src/stm32f1xx_hal_msp.o"

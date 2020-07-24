@@ -10,7 +10,7 @@
 
 
 #include <stdio.h>
-#include "main.h"
+
 #include "app_Delay.h"
 
 
@@ -28,6 +28,7 @@
 	#include "stm32f1xx_hal_gpio.h"
 #endif
 
-extern void app_Debounce(void);
-extern volatile uint8_t Aumento;
+extern void app_Debounce(uint16_t Boton[], uint8_t Numero_Botones);
+extern void app_SeleccionarAngulo(void);
+extern uint16_t Total;
 
