@@ -84,7 +84,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 
       /* uwFrequency computation
       TIM2 counter clock = (RCC_Clocks.HCLK_Frequency) */
-      uwFrequency = (HAL_RCC_GetHCLKFreq())  / uwIC2Value;
+      uwFrequency = (HAL_RCC_GetPCLK1Freq())  / uwIC2Value;
     }
     else
     {
@@ -145,7 +145,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   __HAL_SPI_ENABLE(&hspi1);
   HAL_TIM_Base_Start_IT(&htim1);
-  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
   HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
   app_InitMAX7219();
   /* USER CODE END 2 */
@@ -153,13 +153,12 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   /* Se manda la direccion del Boton */
-  uint16_t Boton[3] = {0x1000, 0x2000, 0x4000};
+
 
   while (1)
   {
-	  app_Debounce(Boton, 2);
-	  app_SeleccionarAngulo();
-	  app_NumeroAMAX7219(Total, 4);
+
+	  app_Dimmer(uwFrequency);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -325,8 +324,9 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
-  sSlaveConfig.InputTrigger = TIM_TS_TI2FP2;
-  sSlaveConfig.TriggerPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sSlaveConfig.InputTrigger = TIM_TS_ETRF;
+  sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
+  sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
   sSlaveConfig.TriggerFilter = 0;
   if (HAL_TIM_SlaveConfigSynchro(&htim2, &sSlaveConfig) != HAL_OK)
   {

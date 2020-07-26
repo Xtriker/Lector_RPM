@@ -11,12 +11,17 @@
 #include "main.h"
 #include "pid_controller.h"
 #include "app_Delay.h"
+#include "app_MAX7219.h"
+#include "app_Debounce.h"
 
 enum{
+	  Inicio,
 	  Ecuacion,
 	  Dimmer,
-	  Lectura_RPM
+	  PID
   }opcion;
 
 extern void app_Dimmer(uint16_t Frecuencia);
+extern void app_PIDDimmer(uint16_t Frecuencia);
+
 #endif /* APP_DIGITALDIMMER_H_ */

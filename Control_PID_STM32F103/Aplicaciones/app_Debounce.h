@@ -31,4 +31,5 @@
 extern void app_Debounce(uint16_t Boton[], uint8_t Numero_Botones);
 extern void app_SeleccionarAngulo(void);
 extern uint16_t Total;
+extern volatile uint8_t Aumento;
 
