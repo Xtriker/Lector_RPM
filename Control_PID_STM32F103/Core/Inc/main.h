@@ -70,6 +70,7 @@ void Error_Handler(void);
 #define Boton2_GPIO_Port GPIOB
 #define DetectorCero_Pin GPIO_PIN_15
 #define DetectorCero_GPIO_Port GPIOB
+#define DetectorCero_EXTI_IRQn EXTI15_10_IRQn
 #define SSR_Pin GPIO_PIN_8
 #define SSR_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

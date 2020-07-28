@@ -48,7 +48,7 @@ void app_InitMAX7219(void)
 
     SPI_CS_ENABLE();
     SPI_Transmit(&hspi1, SCAN_LIMIT);
-    SPI_Transmit(&hspi1, SCAN_ALL_DIGITS);
+    SPI_Transmit(&hspi1, 0x03);
     SPI_CS_DISABLE();
 
     SPI_CS_ENABLE();
@@ -70,7 +70,7 @@ void app_InitMAX7219(void)
 void app_NumeroAMAX7219(uint32_t Numero, uint8_t Numero_displays)
 {
 	  volatile uint8_t i;
-	  for(i=4;(Numero > 0) || (Numero_displays - i<=0) ; Numero/=10,i--)
+	  for(i=4;(Numero > 0) || (Numero_displays - i >= 0) ; Numero/=10,i--)
 	  {
 		SPI_CS_ENABLE();
 		SPI_Transmit(&hspi1,i);
@@ -105,7 +105,24 @@ void app_BrilloDisplay(uint8_t Brillo)
 	    SPI_CS_DISABLE();
 	  }
 }
+void app_LimpiarDisplays(void)
+{
+	for(uint8_t i = 0; i < 4;i++)
+	{
+	SPI_CS_ENABLE();
+	SPI_Transmit(&hspi1,i);
+	SPI_Transmit(&hspi1,0xF);
+	SPI_CS_DISABLE();
+	}
+}
 
+void app_LimpiarDisplay(uint8_t Display)
+{
+		SPI_CS_ENABLE();
+		SPI_Transmit(&hspi1,Display);
+		SPI_Transmit(&hspi1,0xF);
+		SPI_CS_DISABLE();
+}
 /* Contador de 0 a 99999 en 5 displays de 7 segmentos */
 void app_TestMX7219(void)
 {

@@ -50,6 +50,8 @@ extern void app_NumeroAMAX7219(uint32_t Numero, uint8_t Numero_displays);
 extern void app_ApagarDisplay(void);
 extern void app_EncenderDisplay(void);
 extern void app_BrilloDisplay(uint8_t Brillo);
+extern void app_LimpiarDisplays(void);
+extern void app_LimpiarDisplay(uint8_t Display);
 
 extern void SPI_CS_ENABLE(void);
 extern void SPI_CS_DISABLE(void);

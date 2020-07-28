@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "app_Delay.h"
+#include "app_MAX7219.h"
 
 
 /* Seleccion del microcontrolador
@@ -31,5 +32,5 @@
 extern void app_Debounce(uint16_t Boton[], uint8_t Numero_Botones);
 extern void app_SeleccionarAngulo(void);
 extern uint16_t Total;
-extern volatile uint8_t Aumento;
+extern uint8_t Aumento;
 

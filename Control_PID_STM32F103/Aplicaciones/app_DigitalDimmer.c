@@ -13,7 +13,7 @@ TIM_HandleTypeDef htim2;
 float Tiempo_activacion = 0, Angulo = 0;
 float RPM_cal = 0;
 uint16_t Boton[3] = {0x1000, 0x2000, 0x4000};
-
+uint8_t Bandera = 0;
 void app_CruceCero(float Tiempo_activacion)
 {
 	if(Bandera_DetectorCero == 0)
@@ -22,6 +22,7 @@ void app_CruceCero(float Tiempo_activacion)
 		HAL_GPIO_WritePin(SSR_GPIO_Port, SSR_Pin, 1);
 		delay_us(10);
 		HAL_GPIO_WritePin(SSR_GPIO_Port, SSR_Pin, 0);
+		Bandera_DetectorCero = 1;
 	}
 }
 
@@ -29,27 +30,51 @@ void app_Dimmer(uint16_t Frecuencia)
 {
 	 switch(opcion)
 		  {
+			 case Debounce:
+			 {
+				 if((Aumento == 4) && (Bandera == 0))
+				 {
+					  opcion = Ecuacion;
+				 }
+				 else
+				 {
+					app_Debounce(Boton, 2);
+
+					if (Bandera == 0)
+					{
+						opcion = Inicio;
+					}
+					else
+					{
+						opcion = Ecuacion;
+					}
+				 }
+			 }break;
 			  case Inicio:
 			  {
-				  if(Aumento == 4)
-				  {
-					  opcion = Ecuacion;
-				  }
-				  else
-				  {
-					  app_Debounce(Boton, 2);
-
 					  app_SeleccionarAngulo();
 
 					  app_NumeroAMAX7219(Total, 4);
-				  }
+
+					  if(Bandera == 0)
+					  {
+						 opcion = Debounce;
+					  }
+					  else if(Bandera == 1)
+					  {
+						 opcion = Ecuacion;
+					  }
 			  }
 			  break;
 			  case Ecuacion:
 			  {
-				  if(Aumento == 0)
+				  if(Aumento == 1)
 				  {
-					  opcion = Inicio;
+					  opcion = Debounce;
+
+					  Bandera = 0;
+
+					  app_LimpiarDisplay(0x00);
 				  }
 				  else
 				  {
@@ -63,20 +88,27 @@ void app_Dimmer(uint16_t Frecuencia)
 			  break;
 			  case Dimmer:
 			  {
-				  if(Aumento == 0)
+				  if(Aumento == 1)
 				  {
 					  opcion = Inicio;
+
+					  Bandera = 0;
+
+					  app_LimpiarDisplay(0x00);
 				  }
 				  else
 				  {
 					  app_CruceCero(Tiempo_activacion);
 
-					  opcion = Ecuacion;
+					  Bandera = 1;
+
+					  opcion = Debounce;
 				  }
 			  }break;
 			  default:
 			  {
-				  opcion = Inicio;
+				  opcion = Debounce;
+				  app_LimpiarDisplays();
 			  }
 		  }
 }
@@ -89,6 +121,7 @@ void app_PIDDimmer(uint16_t Frecuencia)
 			  {
 				  if(Aumento == 4)
 				  {
+					  app_LimpiarDisplays();
 					  opcion = Ecuacion;
 				  }
 				  else
@@ -105,6 +138,7 @@ void app_PIDDimmer(uint16_t Frecuencia)
 			  {
 				  if(Aumento == 0)
 				  {
+					  app_LimpiarDisplays();
 					  opcion = Inicio;
 				  }
 				  else
@@ -121,6 +155,7 @@ void app_PIDDimmer(uint16_t Frecuencia)
 			  {
 				  if(Aumento == 0)
 				  {
+					  app_LimpiarDisplays();
 					  opcion = Inicio;
 				  }
 				  else
@@ -134,6 +169,7 @@ void app_PIDDimmer(uint16_t Frecuencia)
 			 {
 				 if(Aumento == 0)
 				 {
+					 app_LimpiarDisplays();
 					 opcion = Inicio;
 				 }
 				 else

@@ -7,12 +7,14 @@
 #include "app_Debounce.h"
 #include "main.h"
 
+
 uint16_t TiempoPresionado = 0, Total = 0, Primero = 0, Segundo = 0, Tercero = 0, Cuarto = 0;
-volatile uint8_t Aumento = 0, Seleccion = 0;
+uint8_t Aumento = 1;
+signed int Seleccion = 0;
 
 enum{
 	OpcionUno = 100,
-	OpcionDos = 500
+	OpcionDos = 600
 };
 
 volatile uint8_t i= 0 ,a= 0;
@@ -30,7 +32,15 @@ void app_Debounce(uint16_t Boton[], uint8_t Numero_Botones)
 	{
 		delay_us(50000);
 		TiempoPresionado = TiempoPresionado + 100;
-		Presionado[i] = 1;
+
+		if(TiempoPresionado >= OpcionDos)
+		{
+			Presionado[i] = 0;
+		}
+		else
+		{
+			Presionado[i] = 1;
+		}
 	}
 
 	if((TiempoPresionado <= OpcionUno) && (Presionado[i] == 1))
@@ -40,37 +50,22 @@ void app_Debounce(uint16_t Boton[], uint8_t Numero_Botones)
 			case 0:
 			{
 				TiempoPresionado = 0;
-				Presionado[i] = 0;
+
 				Aumento = 4;
 			}break;
 			case 1:
 			{
 				TiempoPresionado = 0;
-				Presionado[i] = 0;
 
-				if(Seleccion == 9)
-				{
-					Seleccion = 0;
-				}
-				else
-				{
 					Seleccion++;
-				}
 			}break;
 			case 2:
 			{
 				TiempoPresionado = 0;
-					Presionado[i] = 0;
-				if(Seleccion == 0)
-				{
 
-					Seleccion = 9;
-				}
-				else
-				{
 					HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, 0);
 					Seleccion--;
-				}
+
 			}break;
 
 		}
@@ -81,33 +76,21 @@ void app_Debounce(uint16_t Boton[], uint8_t Numero_Botones)
 		{
 			case 0:
 			{
+
 				TiempoPresionado = 0;
-				if(Aumento == 0)
-				{
-					Aumento = 4;
-				}
-				else
-				{
-					Aumento--;
-				}
+				Aumento = 1;
 			}break;
 			case 1:
 			{
+
 				TiempoPresionado = 0;
-				Aumento = 0;
+				Aumento++;
+				HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, 1);
 			}break;
 			case 2:
 			{
 				TiempoPresionado = 0;
-				if(Aumento == 4)
-				{
-					Aumento = 0;
-				}
-				else
-				{
-					Aumento++;
-					HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, 1);
-				}
+				Aumento--;
 			}break;
 		}
 	}
@@ -127,30 +110,94 @@ void app_Debounce(uint16_t Boton[], uint8_t Numero_Botones)
 
 }
 
+
 void app_SeleccionarAngulo(void)
 {
-
 	  switch(Aumento)
 	  {
 		  case 0:
 		  {
-			  Primero = Seleccion * 1000;
-			  Total = Primero;
+			  if(Seleccion > 9)
+			  {
+
+				  Primero = 0;
+				  Seleccion = 0;
+
+			  }
+			  if(Seleccion < 0)
+			  {
+
+				  Primero = 9;
+				  Seleccion = 9;
+
+			  }
+			  else
+			  {
+				  Primero = Seleccion * 1000;
+			  	  Total = Primero;
+			  }
 		  }break;
 		  case 1:
 		  {
-			  Segundo = Seleccion * 100;
-			  Total = Segundo + Primero;
+			  if(Seleccion > 9)
+			  {
+
+				  Segundo = 0;
+				  Seleccion = 0;
+
+			  }
+			  if(Seleccion < 0)
+			  {
+
+				  Segundo = 9;
+				  Seleccion = 9;
+
+			  }
+			  else
+			  {
+				  Segundo = Seleccion * 100;
+				  Total = Segundo + Primero;
+			  }
 		  }break;
 		  case 2:
 		  {
-			  Tercero = Seleccion * 10;
-			  Total = Primero + Segundo + Tercero;
+			  if(Seleccion > 9)
+			  {
+
+				  Tercero = 0;
+				  Seleccion = 0;
+			  }
+			  if(Seleccion < 0)
+			  {
+
+				  Tercero = 9;
+				  Seleccion = 9;
+			  }
+			  else
+			  {
+				  Tercero = Seleccion * 10;
+			  	  Total = Primero + Segundo + Tercero;
+			  }
 		  	}break;
 		  case 3:
    		  {
+   			if(Seleccion > 9)
+			  {
+
+				  Cuarto = 0;
+				  Seleccion = 0;
+			  }
+			  if(Seleccion < 0)
+			  {
+
+				  Cuarto = 9;
+				  Seleccion = 9;
+			  }
+			  else
+			  {
 			  Cuarto = Seleccion;
 			  Total = Primero + Segundo + Tercero + Cuarto;
+			  }
 		   	}break;
 		  default:
 		  {

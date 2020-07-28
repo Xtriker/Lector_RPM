@@ -15,6 +15,7 @@
 #include "app_Debounce.h"
 
 enum{
+	  Debounce,
 	  Inicio,
 	  Ecuacion,
 	  Dimmer,
