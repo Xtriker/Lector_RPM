@@ -1657,8 +1657,8 @@ void app_CruceCero(float Tiempo_activacion)
  8000fde:	f44f 7180 	mov.w	r1, #256	; 0x100
  8000fe2:	480a      	ldr	r0, [pc, #40]	; (800100c <app_CruceCero+0x50>)
  8000fe4:	f001 f89f 	bl	8002126 <HAL_GPIO_WritePin>
-		delay_us(10);
- 8000fe8:	200a      	movs	r0, #10
+		delay_us(5);
+ 8000fe8:	2005      	movs	r0, #5
  8000fea:	f7ff ffcf 	bl	8000f8c <delay_us>
 		HAL_GPIO_WritePin(SSR_GPIO_Port, SSR_Pin, 0);
  8000fee:	2200      	movs	r2, #0

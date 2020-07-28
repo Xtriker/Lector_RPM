@@ -20,7 +20,7 @@ void app_CruceCero(float Tiempo_activacion)
 	{
 		delay_us(Tiempo_activacion);
 		HAL_GPIO_WritePin(SSR_GPIO_Port, SSR_Pin, 1);
-		delay_us(10);
+		delay_us(5);
 		HAL_GPIO_WritePin(SSR_GPIO_Port, SSR_Pin, 0);
 		Bandera_DetectorCero = 1;
 	}
@@ -117,60 +117,90 @@ void app_PIDDimmer(uint16_t Frecuencia)
 {
 	 switch(opcion)
 		  {
-			  case Inicio:
-			  {
-				  if(Aumento == 4)
-				  {
-					  app_LimpiarDisplays();
+	 	 	case Debounce:
+			 {
+				 if((Aumento == 4) && (Bandera == 0))
+				 {
 					  opcion = Ecuacion;
-				  }
-				  else
-				  {
-					  app_Debounce(Boton, 2);
+				 }
+				 else
+				 {
+					app_Debounce(Boton, 2);
 
+					if (Bandera == 0)
+					{
+						opcion = Inicio;
+					}
+					else
+					{
+						opcion = Ecuacion;
+					}
+				 }
+			 }break;
+	 	 	case Inicio:
+			  {
 					  app_SeleccionarAngulo();
 
 					  app_NumeroAMAX7219(Total, 4);
-				  }
+
+					  if(Bandera == 0)
+					  {
+						 opcion = Debounce;
+					  }
+					  else if(Bandera == 1)
+					  {
+						 opcion = Ecuacion;
+					  }
 			  }
 			  break;
-			  case Ecuacion:
+	 	 	case Ecuacion:
 			  {
-				  if(Aumento == 0)
+				  if(Aumento == 1)
 				  {
+					  opcion = Debounce;
+
+					  Bandera = 0;
+
 					  app_LimpiarDisplays();
-					  opcion = Inicio;
 				  }
 				  else
 				  {
 					  RPM_cal = Frecuencia*60;
 
-					  Tiempo_activacion = (4.62962962e-5*Angulo)*1000000;
+					  Tiempo_activacion = (4.62962962e-5*Total)*1000000;
 
 					  opcion = Dimmer;
 				  }
 			  }
 			  break;
-			  case Dimmer:
-			  {
-				  if(Aumento == 0)
+	 	 	case Dimmer:
+	 	 	{
+				  if(Aumento == 1)
 				  {
-					  app_LimpiarDisplays();
 					  opcion = Inicio;
+
+					  Bandera = 0;
+
+					  app_LimpiarDisplays();
 				  }
 				  else
 				  {
 					  app_CruceCero(Tiempo_activacion);
+
+					  Bandera = 1;
 
 					  opcion = PID;
 				  }
 			  }break;
 			  case PID:
 			 {
-				 if(Aumento == 0)
+				 if(Aumento == 1)
 				 {
-					 app_LimpiarDisplays();
 					 opcion = Inicio;
+
+					  Bandera = 0;
+
+					  app_LimpiarDisplays();
 				 }
 				 else
 				 {
@@ -184,7 +214,8 @@ void app_PIDDimmer(uint16_t Frecuencia)
 
 					 Angulo = - (PIDOutputGet()) + 160;
 
-					 opcion = Ecuacion;
+
+					 opcion = Debounce;
 				 }
 			 }break;
 			  default:
