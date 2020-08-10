@@ -17,7 +17,6 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
@@ -50,13 +49,6 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
-/* Captured Value */
-__IO uint32_t            uwIC2Value = 0;
-/* Duty Cycle Value */
-__IO uint32_t            uwDutyCycle = 0;
-/* Frequency Value */
-__IO uint32_t            uwFrequency = 0;
-
 uint8_t Bandera_DetectorCero = 1;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
@@ -71,28 +63,46 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_pin)
 	}
 }
 
+
+uint32_t IC_Value1 = 0;
+uint32_t IC_Value2 = 0;
+uint32_t Difference = 0;
+uint32_t Frequency = 0;
+uint8_t Is_First_Captured = 0;  // 0- not captured, 1- captured
+
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
-  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
-  {
-    /* Get the Input Capture value */
-    uwIC2Value = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
+	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)  // if interrput source is channel 1
+	{
+		if (Is_First_Captured==0)  // is the first value captured ?
+		{
+			IC_Value1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);  // capture the first value
+			Is_First_Captured =1;  // set the first value captured as true
+		}
 
-    if (uwIC2Value != 0)
-    {
-      /* Duty cycle computation */
-      uwDutyCycle = ((HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1)) * 100) / uwIC2Value;
+		else if (Is_First_Captured)  // if the first is captured
+		{
+			IC_Value2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);  // capture second value
 
-      /* uwFrequency computation
-      TIM2 counter clock = (RCC_Clocks.HCLK_Frequency) */
-      uwFrequency = (HAL_RCC_GetPCLK1Freq())  / uwIC2Value;
-    }
-    else
-    {
-      uwDutyCycle = 0;
-      uwFrequency = 0;
-    }
-  }
+			if (IC_Value2 > IC_Value1)
+			{
+				Difference = IC_Value2-IC_Value1;   // calculate the difference
+			}
+
+			else if (IC_Value2 < IC_Value1)
+			{
+				Difference = ((0xffff-IC_Value1)+IC_Value2) +1;
+			}
+
+			else
+			{
+				Error_Handler();
+			}
+
+			Frequency = (2*HAL_RCC_GetPCLK2Freq())/Difference;
+			Is_First_Captured = 0;  // reset the first captured
+		}
+	}
 }
 
 /* USER CODE END PV */
@@ -146,8 +156,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   __HAL_SPI_ENABLE(&hspi1);
   HAL_TIM_Base_Start_IT(&htim1);
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
+  HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);
+  HAL_TIM_Base_Start_IT(&htim2);
   app_InitMAX7219();
   app_LimpiarDisplays();
   /* USER CODE END 2 */
@@ -161,7 +171,7 @@ int main(void)
   {
 
 
-	  app_Dimmer(uwFrequency);
+	  //app_Dimmer(uwFrequency);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -178,7 +188,8 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Initializes the CPU, AHB and APB busses clocks
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -188,7 +199,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -300,7 +311,6 @@ static void MX_TIM2_Init(void)
   /* USER CODE END TIM2_Init 0 */
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_SlaveConfigTypeDef sSlaveConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_IC_InitTypeDef sConfigIC = {0};
 
@@ -326,32 +336,17 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  sSlaveConfig.SlaveMode = TIM_SLAVEMODE_RESET;
-  sSlaveConfig.InputTrigger = TIM_TS_ETRF;
-  sSlaveConfig.TriggerPolarity = TIM_TRIGGERPOLARITY_NONINVERTED;
-  sSlaveConfig.TriggerPrescaler = TIM_TRIGGERPRESCALER_DIV1;
-  sSlaveConfig.TriggerFilter = 0;
-  if (HAL_TIM_SlaveConfigSynchro(&htim2, &sSlaveConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_FALLING;
-  sConfigIC.ICSelection = TIM_ICSELECTION_INDIRECTTI;
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
   if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-  if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
